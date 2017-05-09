@@ -78,8 +78,8 @@ export interface DownloadProgress {
 }
 
 export class CodePush {
+  public static CURRENT_HASH_KEY: string = "CODEPUSH_CURRENT_HASH"; // same as native
   private static PENDING_HASH_KEY: string = "CODEPUSH_PENDING_HASH"; // same as native
-  private static CURRENT_HASH_KEY: string = "CODEPUSH_CURRENT_HASH"; // same as native
   private static CLEAN_KEY: string = "CODEPUSH_CLEAN"; // same as native (Android)
   private static BINARY_FIRST_RUN_KEY: string = "BINARY_FIRST_RUN";
   private static UNCONFIRMED_INSTALL_KEY: string = "UNCONFIRMED_INSTALL";
@@ -204,11 +204,10 @@ export class CodePush {
           tnsRemotePackage.downloadUrl = remotePackage.downloadUrl;
           // the server doesn't send back the deploymentKey
           tnsRemotePackage.deploymentKey = config.deploymentKey;
-          // TODO see https://github.com/Microsoft/cordova-plugin-code-push/blob/055d9e625d47d56e707d9624c9a14a37736516bb/www/codePush.ts#L182
+          // TODO (low prio) see https://github.com/Microsoft/cordova-plugin-code-push/blob/055d9e625d47d56e707d9624c9a14a37736516bb/www/codePush.ts#L182
           // .. or https://github.com/Microsoft/react-native-code-push/blob/2cd2ef0ca2e27a95f84579603c2d222188bb9ce5/CodePush.js#L84
           tnsRemotePackage.failedInstall = false;
 
-          console.log("---- tnsRemotePackage: " + JSON.stringify(tnsRemotePackage));
           resolve(tnsRemotePackage);
         });
       });
@@ -241,24 +240,18 @@ export class CodePush {
   }
 
   static notifyApplicationReady(deploymentKey: string): void {
-    console.log("-- CodePush.hasPendingHash()? " + CodePush.hasPendingHash());
-    console.log("-- is first run?");
     if (CodePush.isBinaryFirstRun()) {
       // first run of a binary from the AppStore
-      console.log("-- yes, marking as first binary run");
       CodePush.markBinaryAsFirstRun();
       new TNSAcquisitionManager(deploymentKey).reportStatusDeploy(null, "DeploymentSucceeded");
 
     } else if (!CodePush.hasPendingHash()) {
       const currentPackageHash = appSettings.getString(CodePush.CURRENT_HASH_KEY, null);
-      console.log("-- currentPackageHash: " + currentPackageHash);
       if (currentPackageHash !== null && currentPackageHash !== CodePush.firstLaunchValue()) {
-        console.log("-- marking currentPackage as first run");
         // first run of an update from CodePush
         CodePush.markPackageAsFirstRun(currentPackageHash);
         const currentPackage: ILocalPackage = <ILocalPackage>TNSLocalPackage.getCurrentPackage();
         currentPackage.isFirstRun = true;
-        console.log("-- fetched current package for reporting: " + currentPackage);
         if (currentPackage !== null) {
           new TNSAcquisitionManager(deploymentKey).reportStatusDeploy(currentPackage, "DeploymentSucceeded");
         }

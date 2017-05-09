@@ -4,7 +4,6 @@
 @implementation TNSCodePush
 
 + (NSString *_Nonnull)applicationPathWithDefault:(NSString *_Nonnull) defaultPath {
-    NSLog(@"^^^^^^^^^^^ in applicationPathWithDefault");
 
     NSString* pack = [NSUserDefaults.standardUserDefaults stringForKey:@"CODEPUSH_CURRENT_HASH"];
     if (pack != nil) {
@@ -47,8 +46,8 @@
     return defaultPath;
 }
 
-
 + (void)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination onProgress:(void (^_Nullable)(long entryNumber, long totalNumber))progressHandler onComplete:(void(^)(NSString * _Nonnull path, BOOL succeeded, NSError * _Nullable error))completionHandler {
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [SSZipArchive unzipFileAtPath:(NSString *)path
                         toDestination:(NSString *)destination
@@ -57,6 +56,58 @@
                       }
                     completionHandler:completionHandler];
     });
+}
+
++ (BOOL)copyEntriesInFolder:(NSString *)sourceFolder
+                 destFolder:(NSString *)destFolder
+                      error:(NSError **)error {
+
+    NSArray *files = [[NSFileManager defaultManager]
+                      contentsOfDirectoryAtPath:sourceFolder
+                      error:error];
+    if (!files) {
+        return NO;
+    }
+    
+    for (NSString *fileName in files) {
+        NSString * fullFilePath = [sourceFolder stringByAppendingPathComponent:fileName];
+        BOOL isDir = NO;
+        if ([[NSFileManager defaultManager] fileExistsAtPath:fullFilePath
+                                                 isDirectory:&isDir] && isDir) {
+            NSString *nestedDestFolder = [destFolder stringByAppendingPathComponent:fileName];
+            BOOL result = [self copyEntriesInFolder:fullFilePath
+                                         destFolder:nestedDestFolder
+                                              error:error];
+            
+            if (!result) {
+                return NO;
+            }
+            
+        } else {
+            NSString *destFileName = [destFolder stringByAppendingPathComponent:fileName];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:destFileName]) {
+                BOOL result = [[NSFileManager defaultManager] removeItemAtPath:destFileName error:error];
+                if (!result) {
+                    return NO;
+                }
+            }
+            if (![[NSFileManager defaultManager] fileExistsAtPath:destFolder]) {
+                BOOL result = [[NSFileManager defaultManager] createDirectoryAtPath:destFolder
+                                                        withIntermediateDirectories:YES
+                                                                         attributes:nil
+                                                                              error:error];
+                if (!result) {
+                    return NO;
+                }
+            }
+            
+            BOOL result = [[NSFileManager defaultManager] copyItemAtPath:fullFilePath toPath:destFileName error:error];
+            if (!result) {
+                return NO;
+            }
+        }
+    }
+    return YES;
 }
 
 @end

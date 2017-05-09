@@ -1,6 +1,6 @@
 import { Observable } from "data/observable";
 import { isIOS } from "platform";
-import { CodePush, SyncStatus, InstallMode, DownloadProgress } from "nativescript-code-push";
+import { CodePush, SyncStatus, InstallMode } from "nativescript-code-push";
 import * as application from "application";
 
 export class HelloWorldModel extends Observable {

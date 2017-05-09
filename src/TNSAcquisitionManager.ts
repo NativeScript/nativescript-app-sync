@@ -8,7 +8,6 @@ export class TNSAcquisitionManager {
   private codePushSDK: AcquisitionManager;
 
   constructor(deploymentKey: string) {
-    console.log("---- TNSAcquisitionManager invoked with deploymentKey: " + deploymentKey);
     const config: Configuration = {
       serverUrl: "https://codepush.azurewebsites.net/",
       appVersion: AppVersion.getVersionNameSync(),
@@ -25,16 +24,16 @@ export class TNSAcquisitionManager {
 
   reportStatusDeploy(pkg?: IPackage, status?: string, previousLabelOrAppVersion?: string, previousDeploymentKey?: string): void {
     this.codePushSDK.reportStatusDeploy(pkg, status, previousLabelOrAppVersion, previousDeploymentKey, () => {
-      console.log("---- reportStatusDeploy completed, status: " + status);
-      console.log("---- reportStatusDeploy completed, pkg: " + JSON.stringify(pkg));
-      console.log("---- reportStatusDeploy completed, previousLabelOrAppVersion: " + previousLabelOrAppVersion);
-      console.log("---- reportStatusDeploy completed, previousDeploymentKey: " + previousDeploymentKey);
+      // console.log("---- reportStatusDeploy completed, status: " + status);
+      // console.log("---- reportStatusDeploy completed, pkg: " + JSON.stringify(pkg));
+      // console.log("---- reportStatusDeploy completed, previousLabelOrAppVersion: " + previousLabelOrAppVersion);
+      // console.log("---- reportStatusDeploy completed, previousDeploymentKey: " + previousDeploymentKey);
     });
   }
 
   reportStatusDownload(pkg: IPackage): void {
     this.codePushSDK.reportStatusDownload(pkg, () => {
-      console.log("---- reportStatusDownload completed");
+      // console.log("---- reportStatusDownload completed");
     });
   }
 }

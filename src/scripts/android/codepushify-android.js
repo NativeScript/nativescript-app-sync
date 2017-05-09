@@ -1,7 +1,7 @@
 const fs = require('fs'),
     path = require('path');
 
-// copy TNSCodePush.java to the platforms folder and patch NativeScriptApplication.java so it calls that file
+// patch NativeScriptApplication.java so it calls TNSCodePush (which is included in the bundled .aar file)
 function patchNativeScriptApplication() {
   try {
     const nsPackage = path.join(__dirname, "..", "..", "..", "..", "platforms", "android", "src", "main", "java", "com", "tns");
@@ -10,22 +10,13 @@ function patchNativeScriptApplication() {
       return;
     }
 
-    const tnsCodePushFileDest = path.join(nsPackage, "TNSCodePush.java");
-    // make sure we don't do this more than once
-    if (fs.existsSync(tnsCodePushFileDest)) {
-      return;
-    }
-
-    // add a file to the build
-    const tnsCodePushFileSrcContents = fs.readFileSync(path.join(__dirname, "TNSCodePush.java"));
-    fs.writeFileSync(tnsCodePushFileDest, tnsCodePushFileSrcContents);
-
-    // and call that file exactly once in the app lifecycle
+    // patch NativeScriptApplication so TNSCodePush.activatePackage it's only called once in the app lifecycle
     const tnsAppFile = path.join(nsPackage, "NativeScriptApplication.java");
     replaceInFile(
         tnsAppFile,
         'super.onCreate();',
-        'super.onCreate();\n\t\tTNSCodePush.activatePackage(this);');
+        // adding a space so we don't do this more than once
+        'super.onCreate() ;\n\t\tTNSCodePush.activatePackage(this);');
 
   } catch(e) {
     console.log("CodePush Android hook error: " + e);

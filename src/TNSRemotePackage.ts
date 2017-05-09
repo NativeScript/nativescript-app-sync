@@ -26,7 +26,8 @@ export class TNSRemotePackage implements IRemotePackage {
           tnsLocalPackage.isMandatory = this.isMandatory;
           tnsLocalPackage.packageHash = this.packageHash;
           tnsLocalPackage.isFirstRun = false;
-          tnsLocalPackage.failedInstall = false; // TODO see https://github.com/Microsoft/cordova-plugin-code-push/blob/055d9e625d47d56e707d9624c9a14a37736516bb/www/remotePackage.ts#L55
+          // TODO (low prio) see https://github.com/Microsoft/cordova-plugin-code-push/blob/055d9e625d47d56e707d9624c9a14a37736516bb/www/remotePackage.ts#L55 (but prolly not too relevant)
+          tnsLocalPackage.failedInstall = false;
 
           downloadSuccess(tnsLocalPackage);
 
@@ -39,6 +40,6 @@ export class TNSRemotePackage implements IRemotePackage {
   }
 
   abortDownload(abortSuccess?: SuccessCallback<void>, abortError?: ErrorCallback): void {
-    // TODO
+    // TODO (low prio)
   }
 }

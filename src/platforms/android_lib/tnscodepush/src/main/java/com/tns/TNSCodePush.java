@@ -5,9 +5,13 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
-class TNSCodePush {
+public class TNSCodePush {
 
     private static final String TNS_PREFERENCES_DB = "prefs.db";
     private static final String CODE_PUSH_APK_BUILD_TIME_KEY = "CODE_PUSH_APK_BUILD_TIME";
@@ -16,23 +20,25 @@ class TNSCodePush {
     private static final String CODEPUSH_CURRENT_APPVERSION_KEY = "CODEPUSH_CURRENT_APPVERSION";
     private static final String CODEPUSH_CURRENT_APPBUILDTIME_KEY = "CODEPUSH_CURRENT_APPBUILDTIME";
 
+    private static final int WRITE_BUFFER_SIZE = 1024 * 8;
+
+    // if CodePush/pending/app path exists, rename it to /app
     static void activatePackage(final Context context) {
-        System.out.println("--------- activatePackage A");
-        final String newPackagePath = getCurrentPackagePath(context);
-        if (newPackagePath == null) {
+        final String pendingPackagePath = getCurrentPackagePath(context);
+        if (pendingPackagePath == null) {
             return;
         }
-        System.out.println("--------- activatePackage B");
 
-        final File newPackage = new File(newPackagePath);
-        if (!newPackage.exists()) {
+        final File pendingPackage = new File(pendingPackagePath);
+        if (!pendingPackage.exists()) {
             return;
         }
 
         // remove the backup folder
         final File appBackupFolder = new File(context.getFilesDir().getPath() + "/app_backup");
         if (appBackupFolder.exists()) {
-            if (!appBackupFolder.delete()) {
+            if (!deleteRecursively(appBackupFolder)) {
+                System.out.println("--- failed to delete backup folder, not taking any risks");
                 return;
             }
         }
@@ -41,8 +47,8 @@ class TNSCodePush {
         final File appFolder = new File(context.getFilesDir().getPath() + "/app");
 
         if (appFolder.renameTo(appBackupFolder)) {
-            // move /<package> to /app
-            if (newPackage.renameTo(appFolder)) {
+            // move pending to /app
+            if (pendingPackage.renameTo(appFolder)) {
                 // as long as the app wasn't restarted after a code push update, this key would exist to control JS behavior
                 removePendingHash(context);
             } else {
@@ -51,6 +57,14 @@ class TNSCodePush {
                 appBackupFolder.renameTo(appFolder);
             }
         }
+    }
+
+    private static boolean deleteRecursively(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                deleteRecursively(child);
+
+        return fileOrDirectory.delete();
     }
 
     private static String getCurrentPackagePath(final Context context) {
@@ -76,7 +90,8 @@ class TNSCodePush {
                 codePushAppBuildTime.equals(appStoreAppBuildTime) && codePushAppVersion.equals(appStoreAppVersion);
 
         if (codePushPackageIsNewerThanAppStoreVersion) {
-            return context.getFilesDir().getPath() + "/CodePush/" + currentHash + "/app";
+//            return context.getFilesDir().getPath() + "/CodePush/" + currentHash + "/app";
+            return context.getFilesDir().getPath() + "/CodePush/pending/app";
         } else {
             // let's use the AppStore version
             removeCurrentHash(context);
@@ -133,5 +148,44 @@ class TNSCodePush {
 
     private static SharedPreferences getPreferences(final Context context) {
         return context.getSharedPreferences(TNS_PREFERENCES_DB, Context.MODE_PRIVATE);
+    }
+
+    public static void copyDirectoryContents(String sourceDirectoryPath, String destinationDirectoryPath) throws IOException {
+        File sourceDir = new File(sourceDirectoryPath);
+        File destDir = new File(destinationDirectoryPath);
+        if (!destDir.exists()) {
+            destDir.mkdir();
+        }
+
+        for (File sourceFile : sourceDir.listFiles()) {
+            if (sourceFile.isDirectory()) {
+                copyDirectoryContents(
+                        appendPathComponent(sourceDirectoryPath, sourceFile.getName()),
+                        appendPathComponent(destinationDirectoryPath, sourceFile.getName()));
+            } else {
+                File destFile = new File(destDir, sourceFile.getName());
+                FileInputStream fromFileStream = null;
+                BufferedInputStream fromBufferedStream = null;
+                FileOutputStream destStream = null;
+                byte[] buffer = new byte[WRITE_BUFFER_SIZE];
+                try {
+                    fromFileStream = new FileInputStream(sourceFile);
+                    fromBufferedStream = new BufferedInputStream(fromFileStream);
+                    destStream = new FileOutputStream(destFile);
+                    int bytesRead;
+                    while ((bytesRead = fromBufferedStream.read(buffer)) > 0) {
+                        destStream.write(buffer, 0, bytesRead);
+                    }
+                } finally {
+                    if (fromFileStream != null) fromFileStream.close();
+                    if (fromBufferedStream != null) fromBufferedStream.close();
+                    if (destStream != null) destStream.close();
+                }
+            }
+        }
+    }
+
+    private static String appendPathComponent(String basePath, String appendPathComponent) {
+        return new File(basePath, appendPathComponent).getAbsolutePath();
     }
 }

@@ -1,4 +1,6 @@
 *.ts
 !*.d.ts
+*.map
 tsconfig.json
 platforms/ios_lib/
+platforms/android_lib/

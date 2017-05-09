@@ -17,16 +17,18 @@
     "codepush.ios": "code-push release-nativescript CodePushDemo-iOS ios",
     "codepush.ios.buildrelease": "code-push release-nativescript CodePushDemo-iOS ios --build --isReleaseBuildType",
     "codepush.android": "code-push release-nativescript CodePushDemo-Android android",
-    "codepush.android.release": "code-push release-nativescript CodePushDemo-Android android -d Staging --build --isReleaseBuildType --keystorePath \"/Users/eddyverbruggen/Desktop/werkmap/Android dev X-Services/xservices.keystore\" --keystorePassword yourpwd --keystoreAlias xservices --keystoreAliasPassword yourpwd",
+    "codepush.android.release": "code-push release-nativescript CodePushDemo-Android android -d Staging --build --isReleaseBuildType --keystorePath \"/Users/eddyverbruggen/Desktop/werkmap/Android dev X-Services/xservices.keystore\" --keystorePassword YOUR_PASSWORD --keystoreAlias xservices --keystoreAliasPassword YOUR_PASSWORD",
     "codepush-clidev.ios": "../../code-push/cli/bin/script/./cli.js release-nativescript CodePushDemo-iOS ios",
     "codepush-clidev.ios.release": "../../code-push/cli/bin/script/./cli.js release-nativescript CodePushDemo-iOS ios --build --isReleaseBuildType",
     "codepush-clidev.ios.rollback": "../../code-push/cli/bin/script/./cli.js rollback CodePushDemo-iOS Staging",
+    "codepush-clidev.ios.clear": "../../code-push/cli/bin/script/./cli.js deployment clear CodePushDemo-iOS Staging",
     "codepush-clidev.android": "../../code-push/cli/bin/script/./cli.js release-nativescript CodePushDemo-Android android",
-    "codepush-clidev.android.release": "../../code-push/cli/bin/script/./cli.js release-nativescript CodePushDemo-Android android -d Staging --build --isReleaseBuildType --keystorePath \"/Users/eddyverbruggen/Desktop/werkmap/Android dev X-Services/xservices.keystore\" --keystorePassword yourpwd --keystoreAlias xservices --keystoreAliasPassword yourpwd",
-    "codepush-clidev.android.rollback": "../../code-push/cli/bin/script/./cli.js rollback CodePushDemo-Android Staging"
+    "codepush-clidev.android.release": "../../code-push/cli/bin/script/./cli.js release-nativescript CodePushDemo-Android android -d Staging --build --isReleaseBuildType --keystorePath \"/Users/eddyverbruggen/Desktop/werkmap/Android dev X-Services/xservices.keystore\" --keystorePassword YOUR_PASSWORD --keystoreAlias xservices --keystoreAliasPassword YOUR_PASSWORD",
+    "codepush-clidev.android.rollback": "../../code-push/cli/bin/script/./cli.js rollback CodePushDemo-Android Staging",
+    "codepush-clidev.android.clear": "../../code-push/cli/bin/script/./cli.js deployment clear CodePushDemo-Android Staging"
   },
   "dependencies": {
-    "nativescript-code-push": "file:///Users/eddyverbruggen/sandboxes/nativescript-code-push/src",
+    "nativescript-code-push": "file:../src",
     "nativescript-theme-core": "^1.0.2",
     "nativescript-unit-test-runner": "^0.3.4",
     "tns-core-modules": "^2.5.1"

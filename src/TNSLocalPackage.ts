@@ -5,6 +5,9 @@ import * as appSettings from "application-settings";
 import { isIOS } from "platform";
 import * as utils from "utils/utils";
 import { TNSAcquisitionManager } from "./TNSAcquisitionManager";
+import { CodePush } from "./code-push";
+
+declare const com: any;
 
 export class TNSLocalPackage implements ILocalPackage {
   // this is the app version at the moment the CodePush package was installed
@@ -12,7 +15,6 @@ export class TNSLocalPackage implements ILocalPackage {
   private static CODEPUSH_CURRENT_PACKAGE: string = "CODEPUSH_CURRENT_PACKAGE";
   // this is the build timestamp of the app at the moment the CodePush package was installed
   private static CODEPUSH_CURRENT_APPBUILDTIME: string = "CODEPUSH_CURRENT_APPBUILDTIME"; // same as native
-
   private static CODEPUSH_APK_BUILD_TIME: string = "CODE_PUSH_APK_BUILD_TIME"; // same as include.gradle
 
   localPath: string;
@@ -26,16 +28,53 @@ export class TNSLocalPackage implements ILocalPackage {
   packageSize: number;
   failedInstall: boolean;
 
-  // see https://github.com/Microsoft/react-native-code-push/blob/2cd2ef0ca2e27a95f84579603c2d222188bb9ce5/ios/CodePush/CodePushPackage.m#L440
-  // and https://github.com/Microsoft/cordova-plugin-code-push/blob/055d9e625d47d56e707d9624c9a14a37736516bb/www/localPackage.ts#L52
   install(installSuccess: SuccessCallback<InstallMode>, errorCallback?: ErrorCallback, installOptions?: InstallOptions): void {
-    let unzipFolderPath = fs.knownFolders.documents().path + "/CodePush/" + this.packageHash;
+    let appFolderPath = fs.knownFolders.documents().path + "/app";
+    let unzipFolderPath = fs.knownFolders.documents().path + "/CodePush-Unzipped/" + this.packageHash;
+    let codePushFolder = fs.knownFolders.documents().path + "/CodePush";
+    // make sure the CodePush folder exists
+    fs.Folder.fromPath(codePushFolder);
+    let newPackageFolderPath = fs.knownFolders.documents().path + "/CodePush/" + this.packageHash;
+    // in case of a rollback make 'newPackageFolderPath' could already exist, so check and remove
+    if (fs.Folder.exists(newPackageFolderPath)) {
+      fs.Folder.fromPath(newPackageFolderPath).removeSync();
+    }
 
     const onUnzipComplete = (success: boolean, error?: string) => {
       if (!success) {
         new TNSAcquisitionManager(this.deploymentKey).reportStatusDeploy(this, "DeploymentFailed");
         errorCallback && errorCallback(new Error(error));
         return;
+      }
+
+      const previousHash = appSettings.getString(CodePush.CURRENT_HASH_KEY, null);
+      const isDiffPackage = fs.File.exists(unzipFolderPath + "/hotcodepush.json");
+      if (isDiffPackage) {
+        const copySourceFolder = previousHash === null ? appFolderPath : fs.knownFolders.documents().path + "/CodePush/" + previousHash;
+        if (!TNSLocalPackage.copyFolder(copySourceFolder, newPackageFolderPath)) {
+          errorCallback && errorCallback(new Error(`Failed to copy ${copySourceFolder} to ${newPackageFolderPath}`));
+          return;
+        }
+        if (!TNSLocalPackage.copyFolder(unzipFolderPath, newPackageFolderPath)) {
+          errorCallback && errorCallback(new Error(`Failed to copy ${unzipFolderPath} to ${newPackageFolderPath}`));
+          return;
+        }
+      } else {
+        new fsa.FileSystemAccess().rename(unzipFolderPath, newPackageFolderPath, (error) => {
+          errorCallback && errorCallback(new Error(error));
+          return;
+        });
+      }
+
+      if (!isIOS) {
+        let pendingFolderPath = fs.knownFolders.documents().path + "/CodePush/pending";
+        if (fs.Folder.exists(pendingFolderPath)) {
+          fs.Folder.fromPath(pendingFolderPath).removeSync();
+        }
+        if (!TNSLocalPackage.copyFolder(newPackageFolderPath, pendingFolderPath)) {
+          errorCallback && errorCallback(new Error(`Failed to copy ${newPackageFolderPath} to ${pendingFolderPath}`));
+          return;
+        }
       }
 
       appSettings.setString(TNSLocalPackage.CODEPUSH_CURRENT_APPVERSION, this.appVersion);
@@ -63,7 +102,7 @@ export class TNSLocalPackage implements ILocalPackage {
         this.localPath,
         unzipFolderPath,
         (percent: number) => {
-          console.log("-- unzip progress: " + percent);
+          console.log("CodePush package unzip progress: " + percent);
         },
         onUnzipComplete);
   }
@@ -102,10 +141,8 @@ export class TNSLocalPackage implements ILocalPackage {
     appSettings.remove(TNSLocalPackage.CODEPUSH_CURRENT_APPBUILDTIME);
 
     const codePushFolder = fs.Folder.fromPath(fs.knownFolders.documents().path + "/CodePush");
-    // doing this async is fine
-    codePushFolder.clear().then(() => {
-      console.log("CodePush folder cleared.");
-    });
+    //noinspection JSIgnoredPromiseFromCall
+    codePushFolder.clear();
   }
 
   private static saveCurrentPackage(pack: IPackage): void {
@@ -115,5 +152,19 @@ export class TNSLocalPackage implements ILocalPackage {
   static getCurrentPackage(): IPackage {
     const packageStr: string = appSettings.getString(TNSLocalPackage.CODEPUSH_CURRENT_PACKAGE, null);
     return packageStr === null ? null : JSON.parse(packageStr);
+  }
+
+  private static copyFolder(fromPath: string, toPath: string): boolean {
+    if (isIOS) {
+      return TNSCodePush.copyEntriesInFolderDestFolderError(fromPath, toPath);
+    } else {
+      try {
+        com.tns.TNSCodePush.copyDirectoryContents(fromPath, toPath);
+        return true;
+      } catch (error) {
+        console.log(`Copy error on Android: ${error}`);
+        return false;
+      }
+    }
   }
 }
