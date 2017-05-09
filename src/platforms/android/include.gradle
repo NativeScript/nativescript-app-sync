@@ -1,0 +1,10 @@
+android {
+    productFlavors {
+        "codepush" {
+            dimension "codepush"
+        }
+    }
+    buildTypes.each {
+        it.resValue "string", "CODE_PUSH_APK_BUILD_TIME", Long.toString(System.currentTimeMillis())
+    }
+}

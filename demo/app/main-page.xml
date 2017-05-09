@@ -1,0 +1,11 @@
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" loaded="pageLoaded" class="page">
+  <StackLayout class="p-20">
+
+    <!-- you can toggle these labels when building/releasing -->
+    <!--<Label text="I'm the AppStore version" class="t-20 text-center c-orange" textWrap="true"/>-->
+    <Label text="I'm CodePush Staging v2" class="t-20 text-center c-blue" textWrap="true"/>
+
+    <Label text="{{ message }}" class="t-20 m-30 text-center c-black" textWrap="true"/>
+  </StackLayout>
+
+</Page>

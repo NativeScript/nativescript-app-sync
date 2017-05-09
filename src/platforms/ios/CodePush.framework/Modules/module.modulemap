@@ -1,0 +1,6 @@
+framework module CodePush {
+  umbrella header "CodePush.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,47 @@
+{
+  "nativescript": {
+    "id": "org.nativescript.plugindemo.CodePush",
+    "tns-android": {
+      "version": "3.0.0"
+    },
+    "tns-ios": {
+      "version": "3.0.0"
+    }
+  },
+  "scripts": {
+    "codepush.list-apps": "code-push app ls",
+    "codepush.android.stats": "code-push deployment ls CodePushDemo-Android --displayKeys",
+    "codepush.ios.stats": "code-push deployment ls CodePushDemo-iOS --displayKeys",
+    "codepush.android.history": "code-push deployment history CodePushDemo-Android Staging",
+    "codepush.ios.history": "code-push deployment history CodePushDemo-iOS Staging",
+    "codepush.ios": "code-push release-nativescript CodePushDemo-iOS ios",
+    "codepush.ios.buildrelease": "code-push release-nativescript CodePushDemo-iOS ios --build --isReleaseBuildType",
+    "codepush.android": "code-push release-nativescript CodePushDemo-Android android",
+    "codepush.android.release": "code-push release-nativescript CodePushDemo-Android android -d Staging --build --isReleaseBuildType --keystorePath \"/Users/eddyverbruggen/Desktop/werkmap/Android dev X-Services/xservices.keystore\" --keystorePassword yourpwd --keystoreAlias xservices --keystoreAliasPassword yourpwd",
+    "codepush-clidev.ios": "../../code-push/cli/bin/script/./cli.js release-nativescript CodePushDemo-iOS ios",
+    "codepush-clidev.ios.release": "../../code-push/cli/bin/script/./cli.js release-nativescript CodePushDemo-iOS ios --build --isReleaseBuildType",
+    "codepush-clidev.ios.rollback": "../../code-push/cli/bin/script/./cli.js rollback CodePushDemo-iOS Staging",
+    "codepush-clidev.android": "../../code-push/cli/bin/script/./cli.js release-nativescript CodePushDemo-Android android",
+    "codepush-clidev.android.release": "../../code-push/cli/bin/script/./cli.js release-nativescript CodePushDemo-Android android -d Staging --build --isReleaseBuildType --keystorePath \"/Users/eddyverbruggen/Desktop/werkmap/Android dev X-Services/xservices.keystore\" --keystorePassword yourpwd --keystoreAlias xservices --keystoreAliasPassword yourpwd",
+    "codepush-clidev.android.rollback": "../../code-push/cli/bin/script/./cli.js rollback CodePushDemo-Android Staging"
+  },
+  "dependencies": {
+    "nativescript-code-push": "file:///Users/eddyverbruggen/sandboxes/nativescript-code-push/src",
+    "nativescript-theme-core": "^1.0.2",
+    "nativescript-unit-test-runner": "^0.3.4",
+    "tns-core-modules": "^2.5.1"
+  },
+  "devDependencies": {
+    "babel-traverse": "6.12.0",
+    "babel-types": "6.11.1",
+    "babylon": "6.8.4",
+    "filewalker": "0.1.2",
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.3.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-nativescript-launcher": "^0.4.0",
+    "lazy": "1.0.11",
+    "nativescript-dev-typescript": "^0.3.7",
+    "typescript": "^2.1.0"
+  }
+}

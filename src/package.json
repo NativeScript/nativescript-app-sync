@@ -1,0 +1,72 @@
+{
+  "name": "nativescript-code-push",
+  "version": "1.0.0",
+  "description": "Use Microsoft CodePush to hot deploy updates to your app. More info: https://microsoft.github.io/code-push/",
+  "main": "code-push",
+  "typings": "index.d.ts",
+  "nativescript": {
+    "platforms": {
+      "android": "2.5.0",
+      "ios": "2.5.0"
+    },
+    "hooks": [
+      {
+        "type": "before-prepare",
+        "script": "scripts/ios/codepushify-ios.js"
+      },
+      {
+        "type": "after-prepare",
+        "script": "scripts/android/codepushify-android.js"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "tsc",
+    "demo.ios": "npm run preparedemo && cd ../demo && tns platform remove ios && tns run ios --emulator",
+    "demo.ios.device": "npm run preparedemo && cd ../demo && tns platform remove ios && tns run ios",
+    "demo.android": "npm run preparedemo && cd ../demo && tns platform remove android && tns run android --justlaunch",
+    "preparedemo": "npm run build && cd ../demo && tns plugin remove nativescript-code-push && tns plugin add ../src && tns install",
+    "disabled-prepublish": "npm run build",
+    "setup": "npm i && cd ../demo && npm i && cd ../src && npm run build",
+    "tslint": "tslint *.ts",
+    "tslint.demo": "tslint ../demo/app/*.ts",
+    "test": "npm run build && npm run tslint && npm run tslint.demo && cd ../demo && tns test android",
+    "test.ios": "npm run build && npm run tslint && npm run tslint.demo && cd ../demo && tns test ios",
+    "development.setup": "npm run setup && npm link && cd ../demo && npm link nativescript-code-push && cd ../src",
+    "postinstall": "node install-hooks.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eddyverbruggen/nativescript-code-push.git"
+  },
+  "keywords": [
+    "ecosystem:nativescript",
+    "NativeScript",
+    "CodePush",
+    "Code Push",
+    "Hot deploy",
+    "Live Sync"
+  ],
+  "author": {
+    "name": "Eddy Verbruggen",
+    "email": "eddyverbruggen@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eddyverbruggen/nativescript-code-push/issues"
+  },
+  "homepage": "https://github.com/eddyverbruggen/nativescript-code-push",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "code-push": "1.11.2-beta",
+    "nativescript-appversion": "1.4.1",
+    "nativescript-hook": "^0.2.1",
+    "nativescript-zip": "git+https://github.com/EddyVerbruggen/nativescript-zip.git#330fa2d"
+  },
+  "devDependencies": {
+    "tns-core-modules": "^2.5.0",
+    "tns-platform-declarations": "^2.5.0",
+    "tslint": "^5.1.0",
+    "typescript": "^2.1.0"
+  }
+}
