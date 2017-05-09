@@ -1,4 +1,4 @@
-declare module Http {
+declare namespace Http {
     export const enum Verb {
         GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, CONNECT, PATCH
     }
@@ -94,7 +94,7 @@ interface ILocalPackage extends IPackage {
  * Decomposed static side of RemotePackage.
  * For Class Decomposition guidelines see http://www.typescriptlang.org/Handbook#writing-dts-files-guidelines-and-specifics
  */
-interface RemotePackage_Static {
+interface RemotePackageStatic {
     new (): IRemotePackage;
 }
 
@@ -102,12 +102,12 @@ interface RemotePackage_Static {
  * Decomposed static side of LocalPackage.
  * For Class Decomposition guidelines see http://www.typescriptlang.org/Handbook#writing-dts-files-guidelines-and-specifics
  */
-interface LocalPackage_Static {
+interface LocalPackageStatic {
     new (): ILocalPackage;
 }
 
-declare var RemotePackage: RemotePackage_Static;
-declare var LocalPackage: LocalPackage_Static;
+declare var RemotePackage: RemotePackageStatic;
+declare var LocalPackage: LocalPackageStatic;
 
 /**
  * Defines the JSON format of the current package information file.
@@ -133,7 +133,7 @@ interface Configuration {
     clientUniqueId: string;
     deploymentKey: string;
     serverUrl: string;
-    ignoreAppVersion?: boolean
+    ignoreAppVersion?: boolean;
 }
 
 declare class AcquisitionStatus {
