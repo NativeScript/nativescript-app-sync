@@ -28,7 +28,7 @@
     "codepush-clidev.android.clear": "../../code-push/cli/bin/script/./cli.js deployment clear CodePushDemo-Android Staging"
   },
   "dependencies": {
-    "nativescript-code-push": "file:../src",
+    "nativescript-code-push": "^1.0.0",
     "nativescript-theme-core": "^1.0.2",
     "nativescript-unit-test-runner": "^0.3.4",
     "tns-core-modules": "^2.5.1"
