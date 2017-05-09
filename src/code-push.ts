@@ -1,3 +1,5 @@
+/// <reference path="./code-push-lib.d.ts"/>
+
 import { device } from "platform";
 import * as appSettings from "application-settings";
 import * as AppVersion from "nativescript-appversion";

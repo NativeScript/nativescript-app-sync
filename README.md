@@ -53,7 +53,7 @@ If an update is available, it will be silently downloaded, and installed the nex
 In the future we may add an option to reload the app instantly or upon resuming.
 
 ```typescript
-// import a few classes
+// import the main plugin classes
 import { CodePush } from "nativescript-code-push";
 
 // and at some point in your app:

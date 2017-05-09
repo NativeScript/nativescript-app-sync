@@ -1,6 +1,6 @@
 {
   "name": "nativescript-code-push",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Use Microsoft CodePush to hot deploy updates to your app. More info: https://microsoft.github.io/code-push/",
   "main": "code-push",
   "typings": "index.d.ts",
@@ -30,7 +30,8 @@
     "setup": "npm i && cd ../demo && npm i && cd ../src && npm run build",
     "tslint": "tslint *.ts",
     "tslint.demo": "tslint ../demo/app/*.ts",
-    "test": "npm run build && npm run tslint && npm run tslint.demo && cd ../demo && tns test android",
+    "test": "npm run build && npm run tslint && npm run tslint.demo && cd ../demo && tns build android",
+    "test.android": "npm run build && npm run tslint && npm run tslint.demo && cd ../demo && tns test android",
     "test.ios": "npm run build && npm run tslint && npm run tslint.demo && cd ../demo && tns test ios",
     "development.setup": "npm run setup && npm link && cd ../demo && npm link nativescript-code-push && cd ../src",
     "postinstall": "node install-hooks.js"

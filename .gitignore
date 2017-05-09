@@ -10,6 +10,7 @@ src/*.d.ts
 !src/scripts/**/*.js
 !src/index.d.ts
 !src/references.d.ts
+!src/code-push-lib.d.ts
 
 demo/app/*.js
 !demo/karma.conf.js
