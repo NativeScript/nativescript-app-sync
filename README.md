@@ -38,10 +38,11 @@ Make sure you're creating seperate CodePush apps for iOS and Android and remembe
 Now install this plugin:
 
 ```shell
-tns plugin add nativescript-plugin-code-push
+tns plugin add nativescript-code-push
 ```
 
 If you're restricting access to the internet from within your app, make sure you whitelist these domains:
+
 - https://codepush.azurewebsites.net
 - https://codepush.blob.core.windows.net
 - https://codepushupdates.azureedge.net
@@ -94,7 +95,7 @@ application.on(application.resumeEvent, () => {
 ## Releasing updates
 Once your app has been configured and distributed to your users, and you've made some code and/or asset changes,
 it's time to instantly release them! The simplest way to do this is to use the `release-nativescript` command in the CodePush CLI,
-but while that's a pending *Pull Request* it's a two-step process instead of only one:
+but while that's a [pending pull request](https://github.com/Microsoft/code-push/pull/435) it's a two-step process instead of only one:
 
 ### iOS
 
