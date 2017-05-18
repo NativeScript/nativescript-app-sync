@@ -143,6 +143,8 @@ Perform these steps once you've pushed an update and added the `sync` command:
 - kill the app after the update is installed
 - restart the app
 
+> Note that (at least on Android) that `--no-watch` is really required as otherwise LiveSync will mess with your test!
+
 ## Future enhancements
 
 ### Fix reporting
