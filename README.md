@@ -3,6 +3,8 @@
 This plugin provides client-side integration for the [CodePush service](http://codepush.tools),
 allowing you to easily add a dynamic update experience to your NativeScript app(s).
 
+> BEWARE: Sometime June 2017 it is expected you can no longer create new CodePush apps anymore. Apps created beforehand will continue to work for the foreseeable future though. The exact date? Unknown, but you'll notice when trying to create an app with the CodePush CLI.
+
 [![Build Status][build-status]][build-url]
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
