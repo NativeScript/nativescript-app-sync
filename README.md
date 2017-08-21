@@ -5,7 +5,7 @@ allowing you to easily add a dynamic update experience to your NativeScript app(
 
 > BEWARE: Sometime June 2017 it is expected you can no longer create new CodePush apps anymore. Apps created beforehand will continue to work for the foreseeable future though. The exact date? Unknown, but you'll notice when trying to create an app with the CodePush CLI.
 
-> UPDATE june 19 2017: The aforementioned change has been made; sadly no net CodePush NativeScript apps can be created.
+> UPDATE june 19 2017: The aforementioned change has been made; sadly no new CodePush NativeScript apps can be created. See [this issue](https://github.com/Microsoft/code-push/pull/435) for details.
 
 [![Build Status][build-status]][build-url]
 [![NPM version][npm-image]][npm-url]
