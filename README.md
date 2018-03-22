@@ -7,12 +7,9 @@ allowing you to easily add a dynamic update experience to your NativeScript app(
 
 > UPDATE june 19 2017: The aforementioned change has been made; sadly no new CodePush NativeScript apps can be created. See [this issue](https://github.com/Microsoft/code-push/pull/435) for details.
 
-[![Build Status][build-status]][build-url]
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 
-[build-status]:https://travis-ci.org/EddyVerbruggen/nativescript-code-push.svg?branch=master
-[build-url]:https://travis-ci.org/EddyVerbruggen/nativescript-code-push
 [npm-image]:http://img.shields.io/npm/v/nativescript-code-push.svg
 [npm-url]:https://npmjs.org/package/nativescript-code-push
 [downloads-image]:http://img.shields.io/npm/dm/nativescript-code-push.svg
