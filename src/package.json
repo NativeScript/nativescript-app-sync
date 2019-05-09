@@ -31,6 +31,7 @@
     "setup": "npm i && cd ../demo && npm i && cd ../src && npm run build",
     "tslint": "tslint *.ts",
     "tslint.demo": "tslint ../demo/app/*.ts",
+    "ci.tslint": "npm i && tslint '**/*.ts' --config '../tslint.json' --exclude '**/node_modules/**' --exclude '**/typings/**'",
     "test": "npm run build && npm run tslint && npm run tslint.demo && cd ../demo && tns build android",
     "test.android": "npm run build && npm run tslint && npm run tslint.demo && cd ../demo && tns test android",
     "test.ios": "npm run build && npm run tslint && npm run tslint.demo && cd ../demo && tns test ios",

@@ -181,7 +181,7 @@ nativescript-code-push deployment history <codepush-ios-appname> Staging
 You may want to play with CodePush before using it in production (smart move!).
 Perform these steps once you've pushed an update and added the `sync` command to your app:
 
-- `$ tns run [ios|android] # on an iOS device add the --release flag so LiveSync doesn't mess up your test`
+- `$ tns run <platform>`. On an iOS device add the --release flag so LiveSync doesn't interfere`
 - kill and restart the app after the update is installed
 
 ## Future enhancements
