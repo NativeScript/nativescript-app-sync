@@ -26,7 +26,7 @@
     "codepush-clidev.android.release": "../../code-push/cli/bin/script/./cli.js release-nativescript CodePushDemo-Android android -deploymentName Staging --build --isReleaseBuildType --keystorePath \"/Users/eddyverbruggen/Desktop/werkmap/Android dev X-Services/xservices.keystore\" --keystorePassword YOUR_PASSWORD --keystoreAlias xservices --keystoreAliasPassword YOUR_PASSWORD",
     "codepush-clidev.android.rollback": "../../code-push/cli/bin/script/./cli.js rollback CodePushDemo-Android Staging",
     "codepush-clidev.android.clear": "../../code-push/cli/bin/script/./cli.js deployment clear CodePushDemo-Android Staging",
-    "build.plugin": "cd ../src && npm run build && npm run package",
+    "build.plugin": "cd ../src && npm i && npm run build && npm run package",
     "ci.tslint": "npm i && tslint --config '../tslint.json' 'demoapp/**/*.ts' --exclude '**/node_modules/**' --exclude '**/typings/**'"
   },
   "dependencies": {
