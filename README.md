@@ -9,12 +9,18 @@ allowing you to easily add a dynamic update experience to your NativeScript app(
 
 > 📣 📣 📣 UPDATE may 9 2019: we're considering rebooting our efforts. Stay tuned!
 
+[![Build Status][build-status]][build-url]
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
+[![Twitter Follow][twitter-image]][twitter-url]
 
+[build-status]:https://travis-ci.org/EddyVerbruggen/nativescript-code-push.svg?branch=master
+[build-url]:https://travis-ci.org/EddyVerbruggen/nativescript-code-push
 [npm-image]:http://img.shields.io/npm/v/nativescript-code-push.svg
 [npm-url]:https://npmjs.org/package/nativescript-code-push
 [downloads-image]:http://img.shields.io/npm/dm/nativescript-code-push.svg
+[twitter-image]:https://img.shields.io/twitter/follow/eddyverbruggen.svg?style=social&label=Follow%20me
+[twitter-url]:https://twitter.com/eddyverbruggen
 
 ## How does it work?
 A NativeScript app is composed of XML/HTML, CSS and JavaScript files and any accompanying images, which are bundled together by the NativeScript CLI and distributed as part of a platform-specific binary (i.e. an .ipa or .apk file). Once the app is released, updating either the code (e.g. making bug fixes, adding new features) or image assets, requires you to recompile and redistribute the entire binary, which of course, includes any review time associated with the store(s) you are publishing to.
