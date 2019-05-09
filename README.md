@@ -7,6 +7,8 @@ allowing you to easily add a dynamic update experience to your NativeScript app(
 
 > UPDATE june 19 2017: The aforementioned change has been made; sadly no new CodePush NativeScript apps can be created. See [this issue](https://github.com/Microsoft/code-push/pull/435) for details.
 
+> 📣 📣 📣 UPDATE may 9 2019: we're considering rebooting our efforts. Stay tuned!
+
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 
@@ -33,25 +35,61 @@ So as long as you don't change versions of dependencies and tns platforms in you
 can push happily. And if you do bump a version of a dependency make sure there are no changed platform libraries.
 
 ## Getting Started
-Follow the general-purpose ["getting started"](http://microsoft.github.io/code-push//docs/getting-started.html) instructions for setting up your CodePush account.
-Make sure you're creating seperate CodePush apps for iOS and Android and remember the deployment keys (if you forget them, grab them via `code-push deployment ls APP_NAME -k`).
+TODO test this workflow!
 
-Now install this plugin:
+#### Globally install the NativeScript-compatible CodePush CLI
+
+```shell
+npm i -g nativescript-code-push-cli
+```
+
+#### Login or register with the service
+
+Log in if you already have an account:
+
+```shell
+nativescript-code-push login
+```
+
+Register if you don't have an account yet:
+
+```shell
+nativescript-code-push register
+```
+
+#### Register your app with the service
+Create an app for each OS you target:
+
+```shell
+nativescript-code-push app add MyApp-IOS ios nativescript
+nativescript-code-push app add MyApp-Android android nativescript
+```
+
+> This will show you your deployment keys you'll need when connecting to the CodePush server.
+
+#### List your registered apps
+
+```shell
+nativescript-code-push app ls
+```
+
+#### Add this plugin to your app
 
 ```shell
 tns plugin add nativescript-code-push
 ```
 
-If you're restricting access to the internet from within your app, make sure you whitelist these domains:
-
-- https://codepush.azurewebsites.net
-- https://codepush.blob.core.windows.net
-- https://codepushupdates.azureedge.net
+> If you're restricting access to the internet from within your app, make sure you whitelist `https://nativescript-codepush-server.herokuapp.com`.
 
 ## Checking for updates
 With the CodePush plugin installed and configured, the only thing left is to add the necessary code to your app to control when it checks for updates.
-If an update is available, it will be silently downloaded, and installed the next time the app is restarted (so a cold boot, triggered either explicitly by the end user or by the OS), which ensures the least invasive experience for your end users.
+
+If an update is available, it will be silently downloaded, and installed the next time the app is restarted
+(so a cold boot, triggered either explicitly by the end user or by the OS),
+which ensures the least invasive experience for your end users.
 In the future we may add an option to reload the app instantly or upon resuming.
+
+> Also check out the [demo](/demo) for a solid example.
 
 ```typescript
 // import the main plugin classes
@@ -85,7 +123,7 @@ It's recommended to check for updates more than once in a cold boot cycle, so it
 tie this check to the `resume` event:
 
 ```typescript
-import * as application from "application";
+import * as application from "tns-core-modules/application";
 
 // add this in some central place that's executed once in a lifecycle
 application.on(application.resumeEvent, () => {
@@ -95,31 +133,35 @@ application.on(application.resumeEvent, () => {
 
 ## Releasing updates
 Once your app has been configured and distributed to your users, and you've made some code and/or asset changes,
-it's time to instantly release them! The simplest way to do this is to use the `release-nativescript` command in the CodePush CLI,
-but while that's a [pending pull request](https://github.com/Microsoft/code-push/pull/435) it's a two-step process instead of only one:
+it's time to instantly release them!
+
+The easiest way to do this is to use the `release-nativescript` command in our CodePush CLI.
 
 ### iOS
 
 ```shell
-cd <appname>/platforms/ios/<appname>/
-code-push release <codepush-ios-appname> app "1.0.0"
+nativescript-code-push release-nativescript <codepush-ios-appname> ios # deploy to Staging
+nativescript-code-push release-nativescript <codepush-ios-appname> ios --d Production # deploy to Production (default: Staging)
+nativescript-code-push release-nativescript <codepush-ios-appname> ios --targetBinaryVersion ~1.0.0 # release to users running any 1.x version (default: the exact version in Info.plist)
+nativescript-code-push release-nativescript <codepush-ios-appname> ios --rollout 25 # percentage of users this release should be immediately available to (default: 100) 
 ```
 
 ### Android
 
 ```shell
-cd <appname>/platforms/android/src/main/assets/
-code-push release <codepush-android-appname> app "1.0.0"
+nativescript-code-push release-nativescript <codepush-ios-appname> android # deploy to Staging
+nativescript-code-push release-nativescript <codepush-ios-appname> android --d Production # deploy to Production (default: Staging)
+nativescript-code-push release-nativescript <codepush-ios-appname> android --targetBinaryVersion ~1.0.0 # release to users running any 1.x version (default: the exact version in AndroidManifest.xml)
 ```
 
-*NOTE: Currently it's vital you `cd` to the folder mentioned above as we need to push the platform-specific `app` folder.
-Make sure that the app folder is a release-gradle build, so use the same command that you use for AppStore distribution,
-just don't send it to the AppStore. You can even webpack bundle your app, it's all transparent to this plugin.* 
+### Tips
+> Make sure to create a release build first, so use the same command that you'd use for app store distribution, just don't send it to the AppStore. You can even webpack bundle and uglify your app, it's all transparent to this plugin. 
 
-*NOTE: When releasing updates to CodePush, you do not need to bump your app's version, since you aren't modifying the app store version at all.
-CodePush will automatically generate a "label" for each release you make (e.g. `v3`) in order to help identify it within your release history.*
+> When releasing updates to CodePush, you do not need to bump your app's version since you aren't modifying the app store version at all. CodePush will automatically generate a "label" for each release you make (e.g. `v3`) in order to help identify it within your release history.
 
 There are a few options you may want to pass in:
+
+TODO version nr as an additional argument?
 
 ```shell
 # Release an update that targets users running any 1.*.* binary, as opposed to everyone ("*") or a specific version (1.0.0)
@@ -137,6 +179,16 @@ your end users will only actually download the files they need. The service hand
 creating awesome apps and we can worry about optimizing end user downloads.
 
 ## Testing CodePush packages during development
+
+How to test your codepush version works:
+iOS:
+- sim: `tns run ios`
+- device: use the `--release` flag: `tns run ios --release`
+Android:
+- sim: `tns run android`
+- device: untested (TODO)
+
+
 You may want to play with CodePush before using it in production (smart move!).
 Perform these steps once you've pushed an update and added the `sync` command:
 

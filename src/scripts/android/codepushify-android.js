@@ -2,9 +2,9 @@ const fs = require('fs'),
     path = require('path');
 
 // patch NativeScriptApplication.java so it calls TNSCodePush (which is included in the bundled .aar file)
-function patchNativeScriptApplication() {
+function patchNativeScriptApplication(androidProjectFolder) {
   try {
-    const nsPackage = path.join(__dirname, "..", "..", "..", "..", "platforms", "android", "src", "main", "java", "com", "tns");
+    const nsPackage = path.join(androidProjectFolder, "app", "src", "main", "java", "com", "tns");
     if (!fs.existsSync(nsPackage)) {
       console.log("Android not installed, skipping CodePush hook.");
       return;
@@ -16,7 +16,7 @@ function patchNativeScriptApplication() {
         tnsAppFile,
         'super.onCreate();',
         // adding a space so we don't do this more than once
-        'super.onCreate() ;\n\t\tTNSCodePush.activatePackage(this);');
+        'super.onCreate() ;\n\t\t\t\tTNSCodePush.activatePackage(this);');
 
   } catch(e) {
     console.log("CodePush Android hook error: " + e);
@@ -36,4 +36,11 @@ function replaceInFile(someFile, what, by) {
   });
 }
 
-patchNativeScriptApplication();
+module.exports = function (logger, platformsData, projectData, hookArgs) {
+  const androidProjectFolder = path.join(projectData.platformsDir, "android");
+
+  return new Promise(function (resolve, reject) {
+    patchNativeScriptApplication(androidProjectFolder);
+    resolve();
+  });
+};

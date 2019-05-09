@@ -1,7 +1,7 @@
-import * as http from "http";
-import * as fs from "file-system";
-import { TNSLocalPackage } from "./TNSLocalPackage";
+import { File } from "tns-core-modules/file-system";
+import { getFile } from "tns-core-modules/http";
 import { TNSAcquisitionManager } from "./TNSAcquisitionManager";
+import { TNSLocalPackage } from "./TNSLocalPackage";
 
 export class TNSRemotePackage implements IRemotePackage {
   downloadUrl: string;
@@ -15,8 +15,8 @@ export class TNSRemotePackage implements IRemotePackage {
   failedInstall: boolean;
 
   download(downloadSuccess: SuccessCallback<ILocalPackage>, downloadError?: ErrorCallback, downloadProgress?: SuccessCallback<DownloadProgress>): void {
-    http.getFile(this.downloadUrl).then(
-        (file: fs.File) => {
+    getFile(this.downloadUrl).then(
+        (file: File) => {
           let tnsLocalPackage: ILocalPackage = new TNSLocalPackage();
           tnsLocalPackage.localPath = file.path;
           tnsLocalPackage.deploymentKey = this.deploymentKey;

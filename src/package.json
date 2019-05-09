@@ -1,31 +1,33 @@
 {
   "name": "nativescript-code-push",
-  "version": "1.0.1",
-  "description": "Use Microsoft CodePush to hot deploy updates to your app. More info: https://microsoft.github.io/code-push/",
+  "version": "2.0.0",
+  "description": "Use CodePush to hot deploy updates to your app.",
   "main": "code-push",
   "typings": "index.d.ts",
   "nativescript": {
     "platforms": {
-      "android": "2.5.0",
-      "ios": "2.5.0"
+      "android": "4.0.0",
+      "ios": "4.0.0"
     },
     "hooks": [
       {
         "type": "before-prepare",
-        "script": "scripts/ios/codepushify-ios.js"
+        "script": "scripts/ios/codepushify-ios.js",
+        "inject": true
       },
       {
         "type": "after-prepare",
-        "script": "scripts/android/codepushify-android.js"
+        "script": "scripts/android/codepushify-android.js",
+        "inject": true
       }
     ]
   },
   "scripts": {
-    "build": "tsc",
-    "demo.ios": "npm run preparedemo && cd ../demo && tns platform remove ios && tns run ios --emulator",
-    "demo.ios.device": "npm run preparedemo && cd ../demo && tns platform remove ios && tns run ios",
-    "demo.android": "npm run preparedemo && cd ../demo && tns platform remove android && tns run android --justlaunch",
-    "preparedemo": "npm run build && cd ../demo && tns plugin remove nativescript-code-push && tns plugin add ../src && tns install",
+    "build": "tsc --skipLibCheck",
+    "demo.ios": "npm run preparedemo && cd ../demo && tns run ios",
+    "demo.ios.device": "npm run preparedemo && cd ../demo && tns run ios --release",
+    "demo.android": "npm run preparedemo && cd ../demo && tns run android",
+    "preparedemo": "npm run build && npm run package && cd ../demo && tns plugin add ../publish/package/*.tgz && rimraf platforms/android",
     "disabled-prepublish": "npm run build",
     "setup": "npm i && cd ../demo && npm i && cd ../src && npm run build",
     "tslint": "tslint *.ts",
@@ -34,7 +36,9 @@
     "test.android": "npm run build && npm run tslint && npm run tslint.demo && cd ../demo && tns test android",
     "test.ios": "npm run build && npm run tslint && npm run tslint.demo && cd ../demo && tns test ios",
     "development.setup": "npm run setup && npm link && cd ../demo && npm link nativescript-code-push && cd ../src",
-    "postinstall": "node install-hooks.js"
+    "package": "cd ../publish && ./pack.sh",
+    "postinstall": "node postinstall-hooks.js",
+    "preuninstall": "node preuninstall-hooks.js"
   },
   "repository": {
     "type": "git",
@@ -59,15 +63,16 @@
   "homepage": "https://github.com/eddyverbruggen/nativescript-code-push",
   "readmeFilename": "README.md",
   "dependencies": {
-    "code-push": "1.11.2-beta",
-    "nativescript-appversion": "1.4.1",
-    "nativescript-hook": "^0.2.1",
+    "nativescript-code-push-cli": "~1.0.1",
+    "nativescript-appversion": "~1.4.1",
+    "nativescript-hook": "~0.2.5",
     "nativescript-zip": "git+https://github.com/EddyVerbruggen/nativescript-zip.git#330fa2d"
   },
   "devDependencies": {
-    "tns-core-modules": "^2.5.0",
-    "tns-platform-declarations": "^2.5.0",
-    "tslint": "^5.1.0",
-    "typescript": "^2.1.0"
+    "rimraf": "~2.6.3",
+    "tns-core-modules": "~5.3.2",
+    "tns-platform-declarations": "~5.3.2",
+    "tslint": "~5.12.0",
+    "typescript": "~3.2.4"
   }
 }

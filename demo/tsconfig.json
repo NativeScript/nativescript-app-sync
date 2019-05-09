@@ -1,33 +1,30 @@
 {
     "compilerOptions": {
-        "target": "es5",
         "module": "commonjs",
-        "declaration": false,
-        "removeComments": true,
-        "noLib": false,
-        "emitDecoratorMetadata": true,
+        "target": "es5",
         "experimentalDecorators": true,
-        "lib": [
-            "es2016"
-        ],
-        "pretty": true,
-        "allowUnreachableCode": false,
-        "allowUnusedLabels": false,
+        "emitDecoratorMetadata": true,
         "noEmitHelpers": true,
-        "noEmitOnError": false,
-        "noImplicitAny": false,
-        "noImplicitReturns": true,
-        "noImplicitUseStrict": false,
-        "noFallthroughCasesInSwitch": true,
-        "typeRoots": [
-            "./node_modules/@types",
-            "./node_modules"
+        "noEmitOnError": true,
+        "lib": [
+            "es6",
+            "dom"
         ],
-        "types": []
+        "baseUrl": ".",
+        "paths": {
+            "*": [
+                "./node_modules/tns-core-modules/*",
+                "./node_modules/*"
+            ],
+            "~/*": [
+                "app/*"
+            ]
+        }
     },
     "exclude": [
+        "e2e",
         "node_modules",
-        "platforms"
-    ],
-    "compileOnSave": false
+        "platforms",
+        "**/*.aot.ts"
+    ]
 }

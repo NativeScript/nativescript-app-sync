@@ -2,9 +2,9 @@ const fs = require('fs'),
     path = require('path');
 
 // inject some code into main.m
-function patchUIApplicationMain() {
+function patchUIApplicationMain(iosProjectFolder) {
   try {
-    const nsInteralFolder = path.join(__dirname, "..", "..", "..", "..", "platforms", "ios", "internal");
+    const nsInteralFolder = path.join(iosProjectFolder, "internal");
     if (!fs.existsSync(nsInteralFolder)) {
       console.log("iOS not installed, skipping CodePush hook.");
       return;
@@ -13,7 +13,7 @@ function patchUIApplicationMain() {
     const tnsCodePushFileDest = path.join(nsInteralFolder, "main.m");
     const tnsCodePushFileDestContents = fs.readFileSync(tnsCodePushFileDest);
 
-    // make sure we don't do this more than once
+    // making sure we don't do this more than once
     if (tnsCodePushFileDestContents.indexOf("TNSCodePush") === -1) {
       // let's first inject a header we need
       replaceInFile(
@@ -22,7 +22,7 @@ function patchUIApplicationMain() {
           '#include <NativeScript/NativeScript.h>\n#include <CodePush/TNSCodePush.h>'
       );
 
-      // now injecte the function call that determines the correct application path (either default or codepushed)
+      // now inject the function call that determines the correct application path (either default or codepushed)
       replaceInFile(
           tnsCodePushFileDest,
           'applicationPath = [NSBundle mainBundle].bundlePath;',
@@ -41,4 +41,11 @@ function replaceInFile(theFile, what, by) {
   fs.writeFileSync(theFile, result, 'utf8');
 }
 
-patchUIApplicationMain();
+module.exports = function (logger, platformsData, projectData, hookArgs) {
+  const iosProjectFolder = path.join(projectData.platformsDir, "ios");
+
+  return new Promise(function (resolve, reject) {
+    patchUIApplicationMain(iosProjectFolder);
+    resolve();
+  });
+};

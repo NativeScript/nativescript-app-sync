@@ -1,11 +1,11 @@
 /// <reference path="./code-push-lib.d.ts"/>
 
-import { device } from "platform";
 import * as appSettings from "application-settings";
 import * as AppVersion from "nativescript-appversion";
-import { TNSRemotePackage } from "./TNSRemotePackage";
-import { TNSLocalPackage } from "./TNSLocalPackage";
+import { device } from "platform";
 import { TNSAcquisitionManager } from "./TNSAcquisitionManager";
+import { TNSLocalPackage } from "./TNSLocalPackage";
+import { TNSRemotePackage } from "./TNSRemotePackage";
 
 export enum InstallMode {
   /**
@@ -13,14 +13,14 @@ export enum InstallMode {
    */
   IMMEDIATE = <any>"IMMEDIATE",
 
-      /**
-       * The update is downloaded but not installed immediately. The new content will be available the next time the application is started.
-       */
+  /**
+   * The update is downloaded but not installed immediately. The new content will be available the next time the application is started.
+   */
   ON_NEXT_RESTART = <any>"ON_NEXT_RESTART",
 
-      /**
-       * The udpate is downloaded but not installed immediately. The new content will be available the next time the application is resumed or restarted, whichever event happends first.
-       */
+  /**
+   * The udpate is downloaded but not installed immediately. The new content will be available the next time the application is resumed or restarted, whichever event happends first.
+   */
   ON_NEXT_RESUME = <any>"ON_NEXT_RESUME"
 }
 
@@ -31,46 +31,46 @@ export enum SyncStatus {
    */
   UP_TO_DATE = <any>"UP_TO_DATE",
 
-      /**
-       * An update is available, it has been downloaded, unzipped and copied to the deployment folder.
-       * After the completion of the callback invoked with SyncStatus.UPDATE_INSTALLED, the application will be reloaded with the updated code and resources.
-       */
+  /**
+   * An update is available, it has been downloaded, unzipped and copied to the deployment folder.
+   * After the completion of the callback invoked with SyncStatus.UPDATE_INSTALLED, the application will be reloaded with the updated code and resources.
+   */
   UPDATE_INSTALLED = <any>"UPDATE_INSTALLED",
 
-      /**
-       * An optional update is available, but the user declined to install it. The update was not downloaded.
-       */
+  /**
+   * An optional update is available, but the user declined to install it. The update was not downloaded.
+   */
   UPDATE_IGNORED = <any>"UPDATE_IGNORED",
 
-      /**
-       * An error happened during the sync operation. This might be an error while communicating with the server, downloading or unziping the update.
-       * The console logs should contain more information about what happened. No update has been applied in this case.
-       */
+  /**
+   * An error happened during the sync operation. This might be an error while communicating with the server, downloading or unziping the update.
+   * The console logs should contain more information about what happened. No update has been applied in this case.
+   */
   ERROR = <any>"ERROR",
 
-      /**
-       * There is an ongoing sync in progress, so this attempt to sync has been aborted.
-       */
+  /**
+   * There is an ongoing sync in progress, so this attempt to sync has been aborted.
+   */
   IN_PROGRESS = <any>"IN_PROGRESS",
 
-      /**
-       * Intermediate status - the plugin is about to check for updates.
-       */
+  /**
+   * Intermediate status - the plugin is about to check for updates.
+   */
   CHECKING_FOR_UPDATE = <any>"CHECKING_FOR_UPDATE",
 
-      /**
-       * Intermediate status - a user dialog is about to be displayed. This status will be reported only if user interaction is enabled.
-       */
+  /**
+   * Intermediate status - a user dialog is about to be displayed. This status will be reported only if user interaction is enabled.
+   */
   AWAITING_USER_ACTION = <any>"AWAITING_USER_ACTION",
 
-      /**
-       * Intermediate status - the update package is about to be downloaded.
-       */
+  /**
+   * Intermediate status - the update package is about to be downloaded.
+   */
   DOWNLOADING_PACKAGE = <any>"DOWNLOADING_PACKAGE",
 
-      /**
-       * Intermediate status - the update package is about to be installed.
-       */
+  /**
+   * Intermediate status - the update package is about to be installed.
+   */
   INSTALLING_UPDATE = <any>"INSTALLING_UPDATE"
 }
 
@@ -176,10 +176,10 @@ export class CodePush {
   static checkForUpdate(deploymentKey: string): Promise<IRemotePackage> {
     return new Promise((resolve, reject) => {
       const config: Configuration = {
-        serverUrl: "https://codepush.azurewebsites.net/",
+        serverUrl: "https://nativescript-codepush-server.herokuapp.com/",
         appVersion: AppVersion.getVersionNameSync(),
         clientUniqueId: device.uuid,
-        deploymentKey: deploymentKey
+        deploymentKey
       };
 
       CodePush.getCurrentPackage(config).then((queryPackage?: IPackage) => {
@@ -253,8 +253,8 @@ export class CodePush {
         // first run of an update from CodePush
         CodePush.markPackageAsFirstRun(currentPackageHash);
         const currentPackage: ILocalPackage = <ILocalPackage>TNSLocalPackage.getCurrentPackage();
-        currentPackage.isFirstRun = true;
         if (currentPackage !== null) {
+          currentPackage.isFirstRun = true;
           new TNSAcquisitionManager(deploymentKey).reportStatusDeploy(currentPackage, "DeploymentSucceeded");
         }
       }
@@ -263,7 +263,6 @@ export class CodePush {
 
   private static isBinaryFirstRun(): boolean {
     const firstRunFlagSet = appSettings.getBoolean(CodePush.BINARY_FIRST_RUN_KEY, false);
-    console.log("-- firstRunFlagSet? " + firstRunFlagSet);
     return !firstRunFlagSet;
   }
 

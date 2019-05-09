@@ -6,7 +6,7 @@
 *.log
 
 src/*.d.ts
-!src/install-hooks.js
+!src/*install-hooks.js
 !src/scripts/**/*.js
 !src/index.d.ts
 !src/references.d.ts
