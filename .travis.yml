@@ -1,38 +1,52 @@
-language: android
-
-jdk: oraclejdk8
+matrix:
+  include:
+    - stage: "Lint"
+      language: node_js
+      os: linux
+      node_js: "8"
+      script: cd src && npm run ci.tslint
+    - stage: "WebPack, Build"
+      os: osx
+      env:
+        - WebPack="iOS"
+      osx_image: xcode10.0
+      language: node_js
+      node_js: "8"
+      jdk: oraclejdk8
+      script: cd demo && npm run build.plugin && npm i && tns build ios --bundle --env.uglify
+    - language: android
+      env:
+        - BuildAndroid="28"
+      os: linux
+      jdk: oraclejdk8
+      before_install: nvm install stable
+      script:
+        - cd src && npm i && npm run preparedemo && cd ../demo && tns build android
+    - os: osx
+      env:
+        - BuildiOS="12"
+        - Xcode="10.0"
+      osx_image: xcode10.0
+      language: node_js
+      node_js: "8"
+      jdk: oraclejdk8
+      script:
+        - cd src && npm i && npm run preparedemo && cd ../demo && tns build ios
 
 android:
   components:
     - tools
     - platform-tools
-    - build-tools-25.0.2
-    - android-25
+    - build-tools-28.0.3
+    - android-28
     - extra-android-m2repository
     - sys-img-armeabi-v7a-android-21
 
-before_cache:
-    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-
-cache:
-    directories:
-        - .nvm
-        - $HOME/.gradle/caches/
-        - $HOME/.gradle/wrapper/
+before_install:
+  - sudo pip install --upgrade pip
+  - sudo pip install six
 
 install:
-    - nvm install node
-    - npm install -g nativescript
-    - tns usage-reporting disable
-    - tns error-reporting disable
-    - npm install
-
-before_script:
-    - echo no | android create avd --force -n test -t android-21 -b armeabi-v7a
-    - emulator -avd test -no-audio -no-window &
-    - android-wait-for-emulator
-
-script:
-    - cd src
-    - npm run setup
-    - npm test
+  - echo no | npm install -g nativescript
+  - tns usage-reporting disable
+  - tns error-reporting disable

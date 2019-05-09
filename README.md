@@ -139,7 +139,14 @@ application.on(application.resumeEvent, () => {
 Once your app has been configured and distributed to your users, and you've made some code and/or asset changes,
 it's time to instantly release them!
 
-The easiest way to do this is to use the `release-nativescript` command in our CodePush CLI.
+The easiest way to do this is to use the `release-nativescript` command in our CodePush CLI. Its (most relevant) options are:
+
+|param|alias|default|description
+|---|---|---|---
+|deploymentName|d|Staging|Deploy to either "Staging" or "Production".
+|description|des||Description of the changes made to the app with this release.
+|targetBinaryVersion|t||Semver expression that specifies the binary app version(s) this release is targeting (e.g. 1.1.0, ~1.2.3).
+|rollout|r|100%|Percentage of users this release should be available to. The `%` sign is optional.
 
 ### iOS
 
@@ -147,15 +154,15 @@ The easiest way to do this is to use the `release-nativescript` command in our C
 nativescript-code-push release-nativescript <codepush-ios-appname> ios # deploy to Staging
 nativescript-code-push release-nativescript <codepush-ios-appname> ios --d Production # deploy to Production (default: Staging)
 nativescript-code-push release-nativescript <codepush-ios-appname> ios --targetBinaryVersion ~1.0.0 # release to users running any 1.x version (default: the exact version in Info.plist)
-nativescript-code-push release-nativescript <codepush-ios-appname> ios --rollout 25 # percentage of users this release should be immediately available to (default: 100) 
+nativescript-code-push release-nativescript <codepush-ios-appname> ios --rollout 25 --description "My awesome iOS version" # percentage of users this release should be immediately available to (default: 100) 
 ```
 
 ### Android
 
 ```shell
-nativescript-code-push release-nativescript <codepush-ios-appname> android # deploy to Staging
-nativescript-code-push release-nativescript <codepush-ios-appname> android --d Production # deploy to Production (default: Staging)
-nativescript-code-push release-nativescript <codepush-ios-appname> android --targetBinaryVersion ~1.0.0 # release to users running any 1.x version (default: the exact version in AndroidManifest.xml)
+nativescript-code-push release-nativescript <codepush-android-appname> android # deploy to Staging
+nativescript-code-push release-nativescript <codepush-android-appname> android --d Production # deploy to Production (default: Staging)
+nativescript-code-push release-nativescript <codepush-android-appname> android --targetBinaryVersion ~1.0.0 # release to users running any 1.x version (default: the exact version in AndroidManifest.xml)
 ```
 
 ### Tips
@@ -163,54 +170,19 @@ nativescript-code-push release-nativescript <codepush-ios-appname> android --tar
 
 > When releasing updates to CodePush, you do not need to bump your app's version since you aren't modifying the app store version at all. CodePush will automatically generate a "label" for each release you make (e.g. `v3`) in order to help identify it within your release history.
 
-There are a few options you may want to pass in:
-
-TODO version nr as an additional argument?
+### Did folks install the update?
+Using a command like this will tell you how many apps have the update installed:
 
 ```shell
-# Release an update that targets users running any 1.*.* binary, as opposed to everyone ("*") or a specific version (1.0.0)
-code-push release CodePushDemo-iOS app "~1.0.0"
-
-# Release an update with a changelog
-code-push release CodePushDemo-iOS app "~1.0.0" --description "Fun times!"
-
-# Release a dev Android build to just 1/4 of your end users
-code-push release CodePushDemo-iOS app "~1.0.0" --description "Fun times!" --rollout 25%
+nativescript-code-push deployment history <codepush-ios-appname> Staging
 ```
-
-The CodePush client supports incremental updates, so even though you are releasing your entire app code on every update,
-your end users will only actually download the files they need. The service handles this automatically so that you can focus on
-creating awesome apps and we can worry about optimizing end user downloads.
 
 ## Testing CodePush packages during development
-
-How to test your codepush version works:
-iOS:
-- sim: `tns run ios`
-- device: use the `--release` flag: `tns run ios --release`
-Android:
-- sim: `tns run android`
-- device: untested (TODO)
-
-
 You may want to play with CodePush before using it in production (smart move!).
-Perform these steps once you've pushed an update and added the `sync` command:
+Perform these steps once you've pushed an update and added the `sync` command to your app:
 
-- `tns run [ios|android] --no-watch --clean`
-- kill the app after the update is installed
-- restart the app
-
-> Note that (at least on Android) that `--no-watch` is really required as otherwise LiveSync will mess with your test!
+- `$ tns run [ios|android] # on an iOS device add the --release flag so LiveSync doesn't mess up your test`
+- kill and restart the app after the update is installed
 
 ## Future enhancements
-
-### Fix reporting
-Using a command like this would normally tell you how many apps have the update installed,
-but that's currently work in progress, so don't freak out if it says 'No installs recorded':
-
-```bash
-code-push deployment history <app-name> Staging
-```
-
-### Support on-resume reloads
-I haven't investigated this possibility yet. If it can be pulled off we'll add an option to the `sync` command.
+Support on-resume reloads. I haven't investigated this possibility yet. If it can be pulled off we'll add an option to the `sync` command.

@@ -25,7 +25,9 @@
     "codepush-clidev.android": "../../code-push/cli/bin/script/./cli.js release-nativescript CodePushDemo-Android android",
     "codepush-clidev.android.release": "../../code-push/cli/bin/script/./cli.js release-nativescript CodePushDemo-Android android -deploymentName Staging --build --isReleaseBuildType --keystorePath \"/Users/eddyverbruggen/Desktop/werkmap/Android dev X-Services/xservices.keystore\" --keystorePassword YOUR_PASSWORD --keystoreAlias xservices --keystoreAliasPassword YOUR_PASSWORD",
     "codepush-clidev.android.rollback": "../../code-push/cli/bin/script/./cli.js rollback CodePushDemo-Android Staging",
-    "codepush-clidev.android.clear": "../../code-push/cli/bin/script/./cli.js deployment clear CodePushDemo-Android Staging"
+    "codepush-clidev.android.clear": "../../code-push/cli/bin/script/./cli.js deployment clear CodePushDemo-Android Staging",
+    "build.plugin": "cd ../src && npm run build && npm run package",
+    "ci.tslint": "npm i && tslint --config '../tslint.json' 'demoapp/**/*.ts' --exclude '**/node_modules/**' --exclude '**/typings/**'"
   },
   "dependencies": {
     "nativescript-code-push": "file:../publish/package/nativescript-code-push-2.0.0.tgz",
@@ -44,7 +46,9 @@
     "karma-nativescript-launcher": "^0.4.0",
     "lazy": "1.0.11",
     "nativescript-dev-typescript": "~0.9.0",
+    "nativescript-dev-webpack": "^0.21.2",
     "tns-platform-declarations": "~5.3.2",
+    "tslint": "~5.4.3",
     "typescript": "~3.2.4"
   }
 }

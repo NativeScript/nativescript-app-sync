@@ -28,7 +28,6 @@
     "demo.ios.device": "npm run preparedemo && cd ../demo && tns run ios --release",
     "demo.android": "npm run preparedemo && cd ../demo && tns run android",
     "preparedemo": "npm run build && npm run package && cd ../demo && tns plugin add ../publish/package/*.tgz && rimraf platforms/android",
-    "disabled-prepublish": "npm run build",
     "setup": "npm i && cd ../demo && npm i && cd ../src && npm run build",
     "tslint": "tslint *.ts",
     "tslint.demo": "tslint ../demo/app/*.ts",
