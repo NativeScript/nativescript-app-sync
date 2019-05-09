@@ -25,7 +25,7 @@ In order to ensure that your end users always have a functioning version of your
 
 _To confuse you even more, have a diagram:_
 
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-code-push/media/NativeScript CodePush landscape.png" width="570px" height="508px">
+<img src="https://github.com/EddyVerbruggen/nativescript-code-push/raw/master/media/NativeScript%20CodePush%20landscape.png" width="570px" height="508px">
 
 ### What can be CodePushed?
 - Anything inside your `/app` folder.
