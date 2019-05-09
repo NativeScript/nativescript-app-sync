@@ -1,11 +1,11 @@
 import { Zip } from "nativescript-zip";
-import * as fs from "file-system";
-import * as fsa from "file-system/file-system-access";
-import * as appSettings from "application-settings";
-import { isIOS } from "platform";
-import * as utils from "utils/utils";
-import { TNSAcquisitionManager } from "./TNSAcquisitionManager";
+import * as appSettings from "tns-core-modules/application-settings";
+import * as fs from "tns-core-modules/file-system";
+import * as fsa from "tns-core-modules/file-system/file-system-access";
+import { isIOS } from "tns-core-modules/platform";
+import * as utils from "tns-core-modules/utils/utils";
 import { CodePush } from "./code-push";
+import { TNSAcquisitionManager } from "./TNSAcquisitionManager";
 
 declare const com: any;
 
@@ -101,8 +101,9 @@ export class TNSLocalPackage implements ILocalPackage {
     TNSLocalPackage.unzip(
         this.localPath,
         unzipFolderPath,
+        // TODO expose through plugin API (not that it's super useful)
         (percent: number) => {
-          console.log("CodePush package unzip progress: " + percent);
+          // console.log("CodePush package unzip progress: " + percent);
         },
         onUnzipComplete);
   }

@@ -1,5 +1,6 @@
-import * as http from "http";
+import { HttpResponse, request } from "tns-core-modules/http";
 import Requester = Http.Requester;
+
 const packageJson = require("./package.json");
 
 export class TNSRequester implements Requester {
@@ -15,17 +16,18 @@ export class TNSRequester implements Requester {
       requestBody = JSON.stringify(requestBody);
     }
 
-    http.request({
+    request({
       method: TNSRequester.getHttpMethodName(verb),
-      url: url,
+      url,
+      content: requestBody,
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
         "X-CodePush-Plugin-Name": packageJson.name,
         "X-CodePush-Plugin-Version": packageJson.version,
-        "X-CodePush-SDK-Version": packageJson.dependencies["code-push"]
+        "X-CodePush-SDK-Version": packageJson.dependencies["nativescript-code-push-cli"]
       }
-    }).then((response: http.HttpResponse) => {
+    }).then((response: HttpResponse) => {
       callback(null, {
         statusCode: response.statusCode,
         body: response.content ? response.content.toString() : null

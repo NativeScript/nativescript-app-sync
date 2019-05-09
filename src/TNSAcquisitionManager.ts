@@ -1,7 +1,7 @@
-import { device } from "platform";
 import * as AppVersion from "nativescript-appversion";
+import { AcquisitionManager as CodePushSDK } from "nativescript-code-push-sdk/script/acquisition-sdk";
+import { device } from "tns-core-modules/platform";
 import { TNSRequester } from "./TNSRequester";
-import { AcquisitionManager as CodePushSDK } from "code-push/script/acquisition-sdk";
 
 export class TNSAcquisitionManager {
 
@@ -9,10 +9,10 @@ export class TNSAcquisitionManager {
 
   constructor(deploymentKey: string) {
     const config: Configuration = {
-      serverUrl: "https://codepush.azurewebsites.net/",
+      serverUrl: "https://nativescript-codepush-server.herokuapp.com/",
       appVersion: AppVersion.getVersionNameSync(),
       clientUniqueId: device.uuid,
-      deploymentKey: deploymentKey
+      deploymentKey
     };
     this.codePushSDK = new CodePushSDK(new TNSRequester(), config);
     return this;
@@ -26,8 +26,6 @@ export class TNSAcquisitionManager {
     this.codePushSDK.reportStatusDeploy(pkg, status, previousLabelOrAppVersion, previousDeploymentKey, () => {
       // console.log("---- reportStatusDeploy completed, status: " + status);
       // console.log("---- reportStatusDeploy completed, pkg: " + JSON.stringify(pkg));
-      // console.log("---- reportStatusDeploy completed, previousLabelOrAppVersion: " + previousLabelOrAppVersion);
-      // console.log("---- reportStatusDeploy completed, previousDeploymentKey: " + previousDeploymentKey);
     });
   }
 
