@@ -114,11 +114,13 @@ CodePush.sync({
 If you have an iOS and Android app, and want some feedback during the sync, you can use this more elaborate version instead:
 
 ```typescript
-import { CodePush, SyncStatus } from "nativescript-code-push";
-import { isIOS } from "platform";
+import { CodePush, InstallMode, SyncStatus } from "nativescript-code-push";
+import { isIOS } from "tns-core-modules/platform";
 
 CodePush.sync({
-    deploymentKey: isIOS ? "your-ios-deployment-key" : "your-android-deployment-key"
+    deploymentKey: isIOS ? "your-ios-deployment-key" : "your-android-deployment-key",
+    installMode: InstallMode.ON_NEXT_RESTART, // this is the default, and at this moment the only option
+    serverUrl: "https://your-backend.server"  // by default this is our shared cloud hosted backend server
   }, (syncStatus: SyncStatus): void => {
     console.log("CodePush syncStatus: " + syncStatus);
     if (syncStatus === SyncStatus.UP_TO_DATE) {

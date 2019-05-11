@@ -99,6 +99,9 @@ export class CodePush {
     }
     CodePush.syncInProgress = true;
 
+    // by default, use our Cloud server
+    options.serverUrl = options.serverUrl || "https://nativescript-codepush-server.herokuapp.com/";
+
     CodePush.cleanPackagesIfNeeded();
 
     CodePush.notifyApplicationReady(options.deploymentKey, options.serverUrl);

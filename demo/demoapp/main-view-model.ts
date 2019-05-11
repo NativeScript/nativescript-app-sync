@@ -35,8 +35,7 @@ export class HelloWorldModel extends Observable {
     CodePush.sync({
       deploymentKey: isIOS ? HelloWorldModel.CODEPUSH_IOS_STAGING_KEY : HelloWorldModel.CODEPUSH_ANDROID_STAGING_KEY,
       installMode: InstallMode.ON_NEXT_RESTART,    // has not effect currently, always using ON_NEXT_RESTART
-      mandatoryInstallMode: InstallMode.IMMEDIATE, // has not effect currently, always using ON_NEXT_RESTART
-      // serverUrl: "https://www.nu.nl"
+      mandatoryInstallMode: InstallMode.IMMEDIATE // has not effect currently, always using ON_NEXT_RESTART
     }, (syncStatus: SyncStatus): void => {
       console.log("syncStatus: " + syncStatus);
       if (syncStatus === SyncStatus.UP_TO_DATE) {
