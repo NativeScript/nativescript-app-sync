@@ -7,9 +7,9 @@ export class TNSAcquisitionManager {
 
   private codePushSDK: AcquisitionManager;
 
-  constructor(deploymentKey: string) {
+  constructor(deploymentKey: string, serverUrl: string) {
     const config: Configuration = {
-      serverUrl: "https://nativescript-codepush-server.herokuapp.com/",
+      serverUrl,
       appVersion: AppVersion.getVersionNameSync(),
       clientUniqueId: device.uuid,
       deploymentKey

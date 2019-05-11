@@ -101,10 +101,10 @@ export class CodePush {
 
     CodePush.cleanPackagesIfNeeded();
 
-    CodePush.notifyApplicationReady(options.deploymentKey);
+    CodePush.notifyApplicationReady(options.deploymentKey, options.serverUrl);
 
     syncCallback && syncCallback(SyncStatus.CHECKING_FOR_UPDATE);
-    CodePush.checkForUpdate(options.deploymentKey).then(
+    CodePush.checkForUpdate(options.deploymentKey, options.serverUrl).then(
         (remotePackage?: IRemotePackage) => {
           if (!remotePackage) {
             syncCallback && syncCallback(SyncStatus.UP_TO_DATE);
@@ -173,17 +173,20 @@ export class CodePush {
     );
   }
 
-  static checkForUpdate(deploymentKey: string): Promise<IRemotePackage> {
+  static checkForUpdate(deploymentKey: string, serverUrl?: string): Promise<IRemotePackage> {
     return new Promise((resolve, reject) => {
+      // by default, use our Cloud server
+      serverUrl = serverUrl || "https://nativescript-codepush-server.herokuapp.com/";
+
       const config: Configuration = {
-        serverUrl: "https://nativescript-codepush-server.herokuapp.com/",
+        serverUrl,
         appVersion: AppVersion.getVersionNameSync(),
         clientUniqueId: device.uuid,
         deploymentKey
       };
 
       CodePush.getCurrentPackage(config).then((queryPackage?: IPackage) => {
-        new TNSAcquisitionManager(deploymentKey).queryUpdateWithCurrentPackage(queryPackage, (error: Error, result: IRemotePackage | NativeUpdateNotification) => {
+        new TNSAcquisitionManager(deploymentKey, serverUrl).queryUpdateWithCurrentPackage(queryPackage, (error: Error, result: IRemotePackage | NativeUpdateNotification) => {
           if (error) {
             reject(error.message || error.toString());
           }
@@ -209,6 +212,7 @@ export class CodePush {
           // TODO (low prio) see https://github.com/Microsoft/cordova-plugin-code-push/blob/055d9e625d47d56e707d9624c9a14a37736516bb/www/codePush.ts#L182
           // .. or https://github.com/Microsoft/react-native-code-push/blob/2cd2ef0ca2e27a95f84579603c2d222188bb9ce5/CodePush.js#L84
           tnsRemotePackage.failedInstall = false;
+          tnsRemotePackage.serverUrl = serverUrl;
 
           resolve(tnsRemotePackage);
         });
@@ -226,7 +230,8 @@ export class CodePush {
         failedInstall: false,
         description: undefined,
         label: undefined,
-        packageSize: undefined
+        packageSize: undefined,
+        serverUrl: config.serverUrl
       });
     });
   }
@@ -241,11 +246,11 @@ export class CodePush {
     TNSLocalPackage.clean();
   }
 
-  static notifyApplicationReady(deploymentKey: string): void {
+  static notifyApplicationReady(deploymentKey: string, serverUrl?: string): void {
     if (CodePush.isBinaryFirstRun()) {
       // first run of a binary from the AppStore
       CodePush.markBinaryAsFirstRun();
-      new TNSAcquisitionManager(deploymentKey).reportStatusDeploy(null, "DeploymentSucceeded");
+      new TNSAcquisitionManager(deploymentKey, serverUrl).reportStatusDeploy(null, "DeploymentSucceeded");
 
     } else if (!CodePush.hasPendingHash()) {
       const currentPackageHash = appSettings.getString(CodePush.CURRENT_HASH_KEY, null);
@@ -255,7 +260,7 @@ export class CodePush {
         const currentPackage: ILocalPackage = <ILocalPackage>TNSLocalPackage.getCurrentPackage();
         if (currentPackage !== null) {
           currentPackage.isFirstRun = true;
-          new TNSAcquisitionManager(deploymentKey).reportStatusDeploy(currentPackage, "DeploymentSucceeded");
+          new TNSAcquisitionManager(deploymentKey, serverUrl).reportStatusDeploy(currentPackage, "DeploymentSucceeded");
         }
       }
     }

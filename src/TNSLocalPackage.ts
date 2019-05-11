@@ -27,6 +27,7 @@ export class TNSLocalPackage implements ILocalPackage {
   packageHash: string;
   packageSize: number;
   failedInstall: boolean;
+  serverUrl: string;
 
   install(installSuccess: SuccessCallback<InstallMode>, errorCallback?: ErrorCallback, installOptions?: InstallOptions): void {
     let appFolderPath = fs.knownFolders.documents().path + "/app";
@@ -42,7 +43,7 @@ export class TNSLocalPackage implements ILocalPackage {
 
     const onUnzipComplete = (success: boolean, error?: string) => {
       if (!success) {
-        new TNSAcquisitionManager(this.deploymentKey).reportStatusDeploy(this, "DeploymentFailed");
+        new TNSAcquisitionManager(this.deploymentKey, this.serverUrl).reportStatusDeploy(this, "DeploymentFailed");
         errorCallback && errorCallback(new Error(error));
         return;
       }

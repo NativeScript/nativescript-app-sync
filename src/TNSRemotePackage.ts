@@ -13,6 +13,7 @@ export class TNSRemotePackage implements IRemotePackage {
   packageHash: string;
   packageSize: number;
   failedInstall: boolean;
+  serverUrl: string;
 
   download(downloadSuccess: SuccessCallback<ILocalPackage>, downloadError?: ErrorCallback, downloadProgress?: SuccessCallback<DownloadProgress>): void {
     getFile(this.downloadUrl).then(
@@ -28,10 +29,11 @@ export class TNSRemotePackage implements IRemotePackage {
           tnsLocalPackage.isFirstRun = false;
           // TODO (low prio) see https://github.com/Microsoft/cordova-plugin-code-push/blob/055d9e625d47d56e707d9624c9a14a37736516bb/www/remotePackage.ts#L55 (but prolly not too relevant)
           tnsLocalPackage.failedInstall = false;
+          tnsLocalPackage.serverUrl = this.serverUrl;
 
           downloadSuccess(tnsLocalPackage);
 
-          new TNSAcquisitionManager(this.deploymentKey).reportStatusDownload(tnsLocalPackage);
+          new TNSAcquisitionManager(this.deploymentKey, this.serverUrl).reportStatusDownload(tnsLocalPackage);
         },
         (e: any) => {
           downloadError(new Error("Could not access local package. " + e));

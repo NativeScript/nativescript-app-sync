@@ -33,6 +33,7 @@ interface IPackage {
     packageHash: string;
     packageSize: number;
     failedInstall: boolean;
+    serverUrl: string;
 }
 
 /**
@@ -324,9 +325,14 @@ interface SyncOptions extends InstallOptions {
     updateDialog?: boolean | UpdateDialogOptions;
 
     /**
-     * Overrides the config.xml deployment key when checking for updates.
+     * The deployment key when checking for updates.
      */
-    deploymentKey?: string;
+    deploymentKey: string;
+
+    /**
+     * Overrides the default server URL (https://nativescript-codepush-server.herokuapp.com/).
+     */
+    serverUrl?: string;
 }
 
 /**
