@@ -158,15 +158,19 @@ application.on(application.resumeEvent, () => {
 
 ## Releasing updates
 Once your app has been configured and distributed to your users, and you've made some code and/or asset changes,
-it's time to instantly release them!
+it's time to instantly unleash those changes onto your users!
+
+> ⚠️ Make sure to create a *release build* first, so use the same command that you'd use for app store distribution, just don't send it to the AppStore. You can even Webpack and Uglify your app, it's all transparent to this plugin.
+
+> 💁‍♂️ When releasing updates to CodePush, you do not need to bump your app's version since you aren't modifying the app store version at all. CodePush will automatically generate a "label" for each release you make (e.g. `v3`) in order to help identify it within your release history.
 
 The easiest way to do this is to use the `release-nativescript` command in our CodePush CLI. Its (most relevant) options are:
 
 |param|alias|default|description
 |---|---|---|---
 |deploymentName|d|"Staging"|Deploy to either "Staging" or "Production".
-|description|des||Description of the changes made to the app with this release.
-|targetBinaryVersion|t||Semver expression that specifies the binary app version(s) this release is targeting (e.g. 1.1.0, ~1.2.3).
+|description|des|not set|Description of the changes made to the app with this release.
+|targetBinaryVersion|t|`App_Resources`|Semver expression that specifies the binary app version(s) this release is targeting (e.g. 1.1.0, ~1.2.3). The default is the exact version in `App_Resources/iOS/Info.plist` or `App_Resources/Android/AndroidManifest.xml`. 
 |mandatory|m|not set|This specifies whether the update should be considered mandatory or not (e.g. it includes a critical security fix). This attribute is simply round tripped to the client, who can then decide if and how they would like to enforce it. This is flag, so its absence indicates an optional release.
 
 Have a few examples for both platforms:
@@ -188,10 +192,6 @@ nativescript-code-push release-nativescript <codepush-android-appname> android -
 nativescript-code-push release-nativescript <codepush-android-appname> android --targetBinaryVersion ~1.0.0 # release to users running any 1.x version (default: the exact version in AndroidManifest.xml)
 ```
 
-> ⚠️ Make sure to create a *release build* first, so use the same command that you'd use for app store distribution, just don't send it to the AppStore. You can even Webpack and Uglify your app, it's all transparent to this plugin.
-
-> 💁‍♂️ When releasing updates to CodePush, you do not need to bump your app's version since you aren't modifying the app store version at all. CodePush will automatically generate a "label" for each release you make (e.g. `v3`) in order to help identify it within your release history.
-
 ## CodePush CLI tricks
 Here are a few commands you may find useful:
 
@@ -199,7 +199,7 @@ Here are a few commands you may find useful:
 Using a command like this will tell you how many apps have the update installed:
 
 ```shell
-nativescript-code-push deployment history <codepush-ios-appname> Staging
+nativescript-code-push deployment history <codepush-appname> Staging
 ```
 
 Which produces something like this:
@@ -215,26 +215,26 @@ Which produces something like this:
 This dumps the details of the most recent release for both the Staging and Production environments of your app:
 
 ```shell
-nativescript-code-push deployment ls <codepush-ios-appname>
+nativescript-code-push deployment ls <codepush-appname>
 ```
 
 And if you want to dump your deployment keys as well, use:
 
 ```shell
-nativescript-code-push deployment ls <codepush-ios-appname> --displayKeys
+nativescript-code-push deployment ls <codepush-appname> --displayKeys
 ```
 
 Which produces something like this:
 
 |Name|Deployment Key|Update Metadata|Install Metrics
 |---|---|---|---
-|Production|r1DVaLfKjc0Y5d6BzqX45SFVss6a4ksvOXqog|No updates released|No installs recorded
-|Staging|YTmVMy0GLCknVu3GVIynTxmfwxJN4ksvOXqog|Label: v5|Active: 11% (2 of 19)
+|Production|r1DVaLfKjc0Y5d6BzqX45SF|No updates released|No installs recorded
+|Staging|YTmVMy0GLCknVu3GVIynTxm|Label: v5|Active: 11% (2 of 19)
 | | |App Version: 1.0.0|Total: 2
 | | |Mandatory: Yes|
 | | |Release Time: an hour ago|
-| | |Released By: eddyverbruggen@gmail.com/
-| | |Description: Mandatory iOS version!/
+| | |Released By: eddyverbruggen@gmail.com|
+| | |Description: Mandatory iOS version!|
 
 ## Testing CodePush packages during development
 You may want to play with CodePush before using it in production (smart move!).
