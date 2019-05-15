@@ -2,7 +2,9 @@
 
 import * as appSettings from "application-settings";
 import * as AppVersion from "nativescript-appversion";
-import { device } from "platform";
+import { device } from "tns-core-modules/platform";
+import { confirm } from "tns-core-modules/ui/dialogs";
+import * as application from "tns-core-modules/application";
 import { TNSAcquisitionManager } from "./TNSAcquisitionManager";
 import { TNSLocalPackage } from "./TNSLocalPackage";
 import { TNSRemotePackage } from "./TNSRemotePackage";
@@ -19,9 +21,9 @@ export enum InstallMode {
   ON_NEXT_RESTART = <any>"ON_NEXT_RESTART",
 
   /**
-   * The udpate is downloaded but not installed immediately. The new content will be available the next time the application is resumed or restarted, whichever event happends first.
+   * The update is downloaded but not installed immediately. The new content will be available the next time the application is resumed or restarted, whichever event happends first.
    */
-  ON_NEXT_RESUME = <any>"ON_NEXT_RESUME"
+  ON_NEXT_RESUME = <any>"ON_NEXT_RESUME",
 }
 
 export enum SyncStatus {
@@ -121,7 +123,7 @@ export class CodePush {
 
           const updateShouldBeIgnored = remotePackage.failedInstall && options.ignoreFailedUpdates;
           if (updateShouldBeIgnored) {
-            console.log("An update is available, but it is being ignored due to have been previously rolled back.");
+            console.log("An update is available, but it is being ignored due to having been previously rolled back.");
             syncCallback && syncCallback(SyncStatus.UP_TO_DATE);
             CodePush.syncInProgress = false;
             return;
@@ -133,22 +135,49 @@ export class CodePush {
             CodePush.syncInProgress = false;
           };
 
-          const onInstallSuccess = (appliedWhen: InstallMode) => {
-            // TODO the next action depends on the SyncOptions (but it's hardcoded to ON_NEXT_RESTART currently)
-            switch (appliedWhen) {
+          const onInstallSuccess = () => {
+            appSettings.setString(CodePush.PENDING_HASH_KEY, remotePackage.packageHash);
+            appSettings.setString(CodePush.CURRENT_HASH_KEY, remotePackage.packageHash);
+
+            const onSuspend = () => {
+              application.off("suspend", onSuspend);
+              this.killApp(false);
+            };
+
+            syncCallback && syncCallback(SyncStatus.UPDATE_INSTALLED);
+
+            const installMode = options.installMode || InstallMode.ON_NEXT_RESTART;
+            const mandatoryInstallMode = options.mandatoryInstallMode || InstallMode.ON_NEXT_RESUME;
+
+            switch (remotePackage.isMandatory ? mandatoryInstallMode : installMode) {
               case InstallMode.ON_NEXT_RESTART:
                 console.log("Update is installed and will be run on the next app restart.");
                 break;
 
               case InstallMode.ON_NEXT_RESUME:
                 console.log("Update is installed and will be run when the app next resumes.");
+                application.on("suspend", onSuspend);
+                break;
+
+              case InstallMode.IMMEDIATE:
+                const updateDialogOptions = <UpdateDialogOptions>(options.updateDialog || {});
+                confirm({
+                  title: updateDialogOptions.updateTitle,
+                  message: (remotePackage.isMandatory ? updateDialogOptions.mandatoryUpdateMessage : updateDialogOptions.optionalUpdateMessage) + (updateDialogOptions.appendReleaseDescription ? "\n" + remotePackage.description : ""),
+                  okButtonText: updateDialogOptions.mandatoryContinueButtonLabel || "Restart",
+                  cancelButtonText: updateDialogOptions.optionalIgnoreButtonLabel || "Cancel",
+                  cancelable: true
+                }).then(confirmed => {
+                  if (confirmed) {
+                    setTimeout(() => this.killApp(true), 300);
+                  } else {
+                    // fall back to next suspend/resume instead
+                    application.on("suspend", onSuspend);
+                  }
+                });
                 break;
             }
 
-            appSettings.setString(CodePush.PENDING_HASH_KEY, remotePackage.packageHash);
-            appSettings.setString(CodePush.CURRENT_HASH_KEY, remotePackage.packageHash);
-
-            syncCallback && syncCallback(SyncStatus.UPDATE_INSTALLED);
             CodePush.syncInProgress = false;
           };
 
@@ -164,7 +193,6 @@ export class CodePush {
               onError,
               downloadProgress
           );
-
         },
         (error: string) => {
           console.log(error);
@@ -176,7 +204,7 @@ export class CodePush {
     );
   }
 
-  static checkForUpdate(deploymentKey: string, serverUrl?: string): Promise<IRemotePackage> {
+  static checkForUpdate(deploymentKey: string, serverUrl?: string): Promise<IRemotePackage | undefined> {
     return new Promise((resolve, reject) => {
       // by default, use our Cloud server
       serverUrl = serverUrl || "https://nativescript-codepush-server.herokuapp.com/";
@@ -188,42 +216,44 @@ export class CodePush {
         deploymentKey
       };
 
-      CodePush.getCurrentPackage(config).then((queryPackage?: IPackage) => {
-        new TNSAcquisitionManager(deploymentKey, serverUrl).queryUpdateWithCurrentPackage(queryPackage, (error: Error, result: IRemotePackage | NativeUpdateNotification) => {
-          if (error) {
-            reject(error.message || error.toString());
-          }
+      CodePush.getCurrentPackage(config)
+          .then((queryPackage?: IPackage) => {
+            new TNSAcquisitionManager(deploymentKey, serverUrl).queryUpdateWithCurrentPackage(queryPackage, (error: Error, result: IRemotePackage | NativeUpdateNotification) => {
+              if (error) {
+                reject(error.message || error.toString());
+              }
 
-          if (!result || (<NativeUpdateNotification>result).updateAppVersion) {
-            resolve(null);
-            return;
-          }
+              if (!result || (<NativeUpdateNotification>result).updateAppVersion) {
+                resolve();
+                return;
+              }
 
-          // At this point we know there's an update available for the current version
-          const remotePackage: IRemotePackage = <IRemotePackage>result;
+              // At this point we know there's an update available for the current version
+              const remotePackage: IRemotePackage = <IRemotePackage>result;
 
-          let tnsRemotePackage: IRemotePackage = new TNSRemotePackage();
-          tnsRemotePackage.description = remotePackage.description;
-          tnsRemotePackage.label = remotePackage.label;
-          tnsRemotePackage.appVersion = remotePackage.appVersion;
-          tnsRemotePackage.isMandatory = remotePackage.isMandatory;
-          tnsRemotePackage.packageHash = remotePackage.packageHash;
-          tnsRemotePackage.packageSize = remotePackage.packageSize;
-          tnsRemotePackage.downloadUrl = remotePackage.downloadUrl;
-          // the server doesn't send back the deploymentKey
-          tnsRemotePackage.deploymentKey = config.deploymentKey;
-          // TODO (low prio) see https://github.com/Microsoft/cordova-plugin-code-push/blob/055d9e625d47d56e707d9624c9a14a37736516bb/www/codePush.ts#L182
-          // .. or https://github.com/Microsoft/react-native-code-push/blob/2cd2ef0ca2e27a95f84579603c2d222188bb9ce5/CodePush.js#L84
-          tnsRemotePackage.failedInstall = false;
-          tnsRemotePackage.serverUrl = serverUrl;
+              let tnsRemotePackage: IRemotePackage = new TNSRemotePackage();
+              tnsRemotePackage.description = remotePackage.description;
+              tnsRemotePackage.label = remotePackage.label;
+              tnsRemotePackage.appVersion = remotePackage.appVersion;
+              tnsRemotePackage.isMandatory = remotePackage.isMandatory;
+              tnsRemotePackage.packageHash = remotePackage.packageHash;
+              tnsRemotePackage.packageSize = remotePackage.packageSize;
+              tnsRemotePackage.downloadUrl = remotePackage.downloadUrl;
+              // the server doesn't send back the deploymentKey
+              tnsRemotePackage.deploymentKey = config.deploymentKey;
+              // TODO (low prio) see https://github.com/Microsoft/cordova-plugin-code-push/blob/055d9e625d47d56e707d9624c9a14a37736516bb/www/codePush.ts#L182
+              // .. or https://github.com/Microsoft/react-native-code-push/blob/2cd2ef0ca2e27a95f84579603c2d222188bb9ce5/CodePush.js#L84
+              tnsRemotePackage.failedInstall = false;
+              tnsRemotePackage.serverUrl = serverUrl;
 
-          resolve(tnsRemotePackage);
-        });
-      });
+              resolve(tnsRemotePackage);
+            });
+          })
+          .catch(e => reject(e));
     });
   }
 
-  static getCurrentPackage(config: Configuration): Promise<IPackage> {
+  private static getCurrentPackage(config: Configuration): Promise<IPackage> {
     return new Promise((resolve, reject) => {
       resolve({
         appVersion: config.appVersion,
@@ -239,17 +269,7 @@ export class CodePush {
     });
   }
 
-  private static cleanPackagesIfNeeded(): void {
-    const shouldClean = appSettings.getBoolean(CodePush.CLEAN_KEY, false);
-    if (!shouldClean) {
-      return;
-    }
-    appSettings.remove(CodePush.CLEAN_KEY);
-    appSettings.remove(CodePush.BINARY_FIRST_RUN_KEY);
-    TNSLocalPackage.clean();
-  }
-
-  static notifyApplicationReady(deploymentKey: string, serverUrl?: string): void {
+  private static notifyApplicationReady(deploymentKey: string, serverUrl?: string): void {
     if (CodePush.isBinaryFirstRun()) {
       // first run of a binary from the AppStore
       CodePush.markBinaryAsFirstRun();
@@ -267,6 +287,36 @@ export class CodePush {
         }
       }
     }
+  }
+
+  private static killApp(restartOnAndroid: boolean): void {
+    if (application.android) {
+      if (restartOnAndroid) {
+        //noinspection JSUnresolvedFunction,JSUnresolvedVariable
+        const mStartActivity = new android.content.Intent(application.android.context, application.android.startActivity.getClass());
+        const mPendingIntentId = parseInt("" + (Math.random() * 100000), 10);
+        //noinspection JSUnresolvedFunction,JSUnresolvedVariable
+        const mPendingIntent = android.app.PendingIntent.getActivity(application.android.context, mPendingIntentId, mStartActivity, android.app.PendingIntent.FLAG_CANCEL_CURRENT);
+        //noinspection JSUnresolvedFunction,JSUnresolvedVariable
+        const mgr = application.android.context.getSystemService(android.content.Context.ALARM_SERVICE);
+        //noinspection JSUnresolvedFunction,JSUnresolvedVariable
+        mgr.set(android.app.AlarmManager.RTC, java.lang.System.currentTimeMillis() + 100, mPendingIntent);
+        //noinspection JSUnresolvedFunction,JSUnresolvedVariable
+      }
+      android.os.Process.killProcess(android.os.Process.myPid());
+    } else if (application.ios) {
+      exit(0);
+    }
+  }
+
+  private static cleanPackagesIfNeeded(): void {
+    const shouldClean = appSettings.getBoolean(CodePush.CLEAN_KEY, false);
+    if (!shouldClean) {
+      return;
+    }
+    appSettings.remove(CodePush.CLEAN_KEY);
+    appSettings.remove(CodePush.BINARY_FIRST_RUN_KEY);
+    TNSLocalPackage.clean();
   }
 
   private static isBinaryFirstRun(): boolean {

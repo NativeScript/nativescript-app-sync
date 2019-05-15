@@ -19,29 +19,29 @@ export class HelloWorldModel extends Observable {
     super();
     this.codePush = new CodePush();
 
-    // let's immediately check for updates on the server
-    this.syncWithCodePushServer();
-
-    // and also check for updates whenever the application is resumed
-    application.on(application.resumeEvent, () => {
-      this.syncWithCodePushServer();
-    });
+    // Check for updates when the app is loaded or resumed
+    application.on(application.resumeEvent, () => this.syncWithCodePushServer());
   }
 
   private syncWithCodePushServer(): void {
     this.set("message", "Querying CodePush..");
-    let that = this;
-
     CodePush.sync({
       deploymentKey: isIOS ? HelloWorldModel.CODEPUSH_IOS_STAGING_KEY : HelloWorldModel.CODEPUSH_ANDROID_STAGING_KEY,
-      installMode: InstallMode.ON_NEXT_RESTART,    // has not effect currently, always using ON_NEXT_RESTART
-      mandatoryInstallMode: InstallMode.IMMEDIATE // has not effect currently, always using ON_NEXT_RESTART
+      installMode: InstallMode.ON_NEXT_RESTART, // default InstallMode.ON_NEXT_RESTART
+      mandatoryInstallMode: InstallMode.IMMEDIATE, // default InstallMode.ON_NEXT_RESUME
+      updateDialog: { // only used for InstallMode.IMMEDIATE
+        optionalUpdateMessage: "Optional update msg",
+        updateTitle: "Please restart the app",
+        mandatoryUpdateMessage: "Mandatory update msg",
+        optionalIgnoreButtonLabel: "Later",
+        mandatoryContinueButtonLabel: isIOS ? "Exit now" : "Restart now",
+        appendReleaseDescription: true // appends the description you (optionally) provided when releasing a new version to CodePush
+      }
     }, (syncStatus: SyncStatus): void => {
-      console.log("syncStatus: " + syncStatus);
       if (syncStatus === SyncStatus.UP_TO_DATE) {
-        that.set("message", "CodePush: up to date");
+        this.set("message", "CodePush: up to date");
       } else if (syncStatus === SyncStatus.UPDATE_INSTALLED) {
-        that.set("message", "CodePush: update installed, kill/restart your app to see the changes");
+        this.set("message", "CodePush: update installed");
       }
     });
   }

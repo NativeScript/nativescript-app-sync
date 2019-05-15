@@ -2,7 +2,7 @@
   <StackLayout class="p-20">
 
     <!-- you can toggle these labels when building/releasing -->
-<!--    <Label text="I'm CODEPUSH version v5" class="t-20 text-center c-orange" textWrap="true"/>-->
+<!--    <Label text="I'm CODEPUSH iOS version v7 (mandatory)" class="t-20 text-center c-orange" textWrap="true"/>-->
     <Label text="I'm the APPSTORE version" class="t-20 text-center c-orange" textWrap="true"/>
 
     <Label text="{{ message }}" class="t-20 m-30 text-center c-black" textWrap="true"/>

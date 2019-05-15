@@ -107,11 +107,11 @@ import { CodePush } from "nativescript-code-push";
 
 // and at some point in your app:
 CodePush.sync({
-  deploymentKey: "your-deployment-key"
+  deploymentKey: "your-deployment-key" // note that this key depends on the platform you're running on (see the example below)
 });
 ```
 
-If you have an iOS and Android app, and want some feedback during the sync, you can use this more elaborate version instead:
+There's a few things you can configure - this example has all the possible options:
 
 ```typescript
 import { CodePush, InstallMode, SyncStatus } from "nativescript-code-push";
@@ -119,8 +119,17 @@ import { isIOS } from "tns-core-modules/platform";
 
 CodePush.sync({
     deploymentKey: isIOS ? "your-ios-deployment-key" : "your-android-deployment-key",
-    installMode: InstallMode.ON_NEXT_RESTART, // this is the default, and at this moment the only option
-    serverUrl: "https://your-backend.server"  // by default this is our shared cloud hosted backend server
+    installMode: InstallMode.ON_NEXT_RESTART,    // this is the default install mode; the app updates upon the next cold boot (unless the --mandatory flag was specified while pushing the update) 
+    mandatoryInstallMode: InstallMode.IMMEDIATE, // the default is InstallMode.ON_NEXT_RESUME which doesn't bother the user as long as the app is in the foreground. InstallMode.IMMEDIATE shows an installation prompt. Don't use that for iOS AppStore distributions because Apple doesn't want you to.
+    serverUrl: "https://your-backend.server",    // by default this is our shared cloud hosted backend server, so you probably want to leave this out
+    updateDialog: { // only used for InstallMode.IMMEDIATE
+      updateTitle: "Please restart the app", // an optional title shown in the update dialog 
+      optionalUpdateMessage: "Optional update msg",   // a message shown for non-"--mandatory" releases 
+      mandatoryUpdateMessage: "Mandatory update msg", // a message shown for "--mandatory" releases
+      optionalIgnoreButtonLabel: "Later", // if a user wants to continue their session, the update will be installed on next resume
+      mandatoryContinueButtonLabel: isIOS ? "Exit now" : "Restart now", // On Android we can kill and restart the app, but on iOS that's not possible so the user has to manually restart it. That's why we provide a different label in this example.
+      appendReleaseDescription: true // appends the description you (optionally) provided when releasing a new version to CodePush
+    }
   }, (syncStatus: SyncStatus): void => {
     console.log("CodePush syncStatus: " + syncStatus);
     if (syncStatus === SyncStatus.UP_TO_DATE) {
@@ -131,8 +140,7 @@ CodePush.sync({
 });
 ```
 
-It's recommended to check for updates more than once in a cold boot cycle, so it may be easiest to
-tie this check to the `resume` event:
+It's recommended to check for updates more than once in a cold boot cycle, so it may be easiest to tie this check to the `resume` event:
 
 ```typescript
 import * as application from "tns-core-modules/application";
@@ -151,10 +159,10 @@ The easiest way to do this is to use the `release-nativescript` command in our C
 
 |param|alias|default|description
 |---|---|---|---
-|deploymentName|d|Staging|Deploy to either "Staging" or "Production".
+|deploymentName|d|"Staging"|Deploy to either "Staging" or "Production".
 |description|des||Description of the changes made to the app with this release.
 |targetBinaryVersion|t||Semver expression that specifies the binary app version(s) this release is targeting (e.g. 1.1.0, ~1.2.3).
-|rollout|r|100%|Percentage of users this release should be available to. The `%` sign is optional.
+|mandatory|m|not set, so "optional"|This specifies whether the update should be considered mandatory or not (e.g. it includes a critical security fix). This attribute is simply round tripped to the client, who can then decide if and how they would like to enforce it. This is flag, so its absence indicates an optional release.
 
 ### iOS
 
@@ -162,7 +170,7 @@ The easiest way to do this is to use the `release-nativescript` command in our C
 nativescript-code-push release-nativescript <codepush-ios-appname> ios # deploy to Staging
 nativescript-code-push release-nativescript <codepush-ios-appname> ios --d Production # deploy to Production (default: Staging)
 nativescript-code-push release-nativescript <codepush-ios-appname> ios --targetBinaryVersion ~1.0.0 # release to users running any 1.x version (default: the exact version in Info.plist)
-nativescript-code-push release-nativescript <codepush-ios-appname> ios --rollout 25 --description "My awesome iOS version" # percentage of users this release should be immediately available to (default: 100) 
+nativescript-code-push release-nativescript <codepush-ios-appname> ios --mandatory --description "My mandatory iOS version" # mandatory release for iOS 
 ```
 
 ### Android
@@ -189,8 +197,5 @@ nativescript-code-push deployment history <codepush-ios-appname> Staging
 You may want to play with CodePush before using it in production (smart move!).
 Perform these steps once you've pushed an update and added the `sync` command to your app:
 
-- `$ tns run <platform>`. On an iOS device add the `--release` flag so LiveSync doesn't interfere.
+- `$ tns run <platform>`. On an iOS *device* add the `--release` flag so LiveSync doesn't interfere.
 - kill and restart the app after the update is installed
-
-## Future enhancements
-Support on-resume reloads. I haven't investigated this possibility yet. If it can be pulled off we'll add an option to the `sync` command.

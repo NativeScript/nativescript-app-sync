@@ -283,7 +283,7 @@ declare enum InstallMode {
     ON_NEXT_RESTART,
 
     /**
-     * The udpate is downloaded but not installed immediately. The new content will be available the next time the application is resumed or restarted, whichever event happends first.
+     * The update is downloaded but not installed immediately. The new content will be available the next time the application is resumed or restarted, whichever event happends first.
      */
     ON_NEXT_RESUME
 }
@@ -303,7 +303,8 @@ interface InstallOptions {
     minimumBackgroundDuration?: number;
 
     /**
-     * Used to specify the InstallMode used for the install operation if the update is mandatory. This is optional and defaults to InstallMode.IMMEDIATE.
+     * Used to specify the InstallMode used for the install operation if the update is mandatory.
+     * This is optional and defaults to InstallMode.ON_NEXT_RESUME.
      */
     mandatoryInstallMode?: InstallMode;
 }

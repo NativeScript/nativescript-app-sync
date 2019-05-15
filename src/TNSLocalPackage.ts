@@ -95,8 +95,7 @@ export class TNSLocalPackage implements ILocalPackage {
       //noinspection JSIgnoredPromiseFromCall (removal is async, don't really care if it fails)
       fs.File.fromPath(this.localPath).remove();
 
-      // TODO this is hardcoded for now as we only support 'install on restart' currently
-      installSuccess(1); // InstallMode.ON_NEXT_RESTART
+      installSuccess();
     };
 
     TNSLocalPackage.unzip(
