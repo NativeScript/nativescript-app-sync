@@ -29,7 +29,9 @@ The CodePush plugin helps get product improvements in front of your end users in
 
 In order to ensure that your end users always have a functioning version of your app, the CodePush plugin maintains a copy of the previous update, so that in the event that you accidentally push an update which includes a crash, it can automatically roll back. This way, you can rest assured that your newfound release agility won't result in users becoming blocked before you have a chance to roll back on the server. It's a win-win-win!
 
-_To confuse you even more, have a diagram:_
+> ⚠️ TODO test the rollback flow!
+
+_To confuse you even more, have a diagram of the bits involved in this solution:_
 
 <img src="https://github.com/EddyVerbruggen/nativescript-code-push/raw/master/media/NativeScript%20CodePush%20landscape.png" width="570px" height="508px">
 
