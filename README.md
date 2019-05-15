@@ -167,11 +167,11 @@ The easiest way to do this is to use the `release-nativescript` command in our C
 |deploymentName|d|"Staging"|Deploy to either "Staging" or "Production".
 |description|des||Description of the changes made to the app with this release.
 |targetBinaryVersion|t||Semver expression that specifies the binary app version(s) this release is targeting (e.g. 1.1.0, ~1.2.3).
-|mandatory|m|not set, so "optional"|This specifies whether the update should be considered mandatory or not (e.g. it includes a critical security fix). This attribute is simply round tripped to the client, who can then decide if and how they would like to enforce it. This is flag, so its absence indicates an optional release.
+|mandatory|m|not set|This specifies whether the update should be considered mandatory or not (e.g. it includes a critical security fix). This attribute is simply round tripped to the client, who can then decide if and how they would like to enforce it. This is flag, so its absence indicates an optional release.
 
 Have a few examples for both platforms:
 
-### iOS
+#### iOS
 
 ```shell
 nativescript-code-push release-nativescript <codepush-ios-appname> ios # deploy to Staging
@@ -180,7 +180,7 @@ nativescript-code-push release-nativescript <codepush-ios-appname> ios --targetB
 nativescript-code-push release-nativescript <codepush-ios-appname> ios --mandatory --description "My mandatory iOS version" # mandatory release for iOS 
 ```
 
-### Android
+#### Android
 
 ```shell
 nativescript-code-push release-nativescript <codepush-android-appname> android # deploy to Staging
@@ -188,10 +188,12 @@ nativescript-code-push release-nativescript <codepush-android-appname> android -
 nativescript-code-push release-nativescript <codepush-android-appname> android --targetBinaryVersion ~1.0.0 # release to users running any 1.x version (default: the exact version in AndroidManifest.xml)
 ```
 
-### Tips
-> Make sure to create a *release build* first, so use the same command that you'd use for app store distribution, just don't send it to the AppStore. You can even Webpack and Uglify your app, it's all transparent to this plugin.
+> ⚠️ Make sure to create a *release build* first, so use the same command that you'd use for app store distribution, just don't send it to the AppStore. You can even Webpack and Uglify your app, it's all transparent to this plugin.
 
-> When releasing updates to CodePush, you do not need to bump your app's version since you aren't modifying the app store version at all. CodePush will automatically generate a "label" for each release you make (e.g. `v3`) in order to help identify it within your release history.
+> 💁‍♂️ When releasing updates to CodePush, you do not need to bump your app's version since you aren't modifying the app store version at all. CodePush will automatically generate a "label" for each release you make (e.g. `v3`) in order to help identify it within your release history.
+
+## CodePush CLI tricks
+Here are a few commands you may find useful:
 
 ### Which releases did I create and what are the install metrics?
 Using a command like this will tell you how many apps have the update installed:
@@ -206,7 +208,6 @@ Which produces something like this:
 |---|---|---|---|---|---
 |v2|an hour ago|1.0.0|Yes|Mandatory iOS version!|Active: 11% (2 of 19)
 |||||Total: 2|
-||||||
 |v1|2 hours ago|1.0.0|No|Awesome iOS version!|Active: 26% (5 of 19)
 |||||Total: 5|
 
@@ -228,7 +229,6 @@ Which produces something like this:
 |Name|Deployment Key|Update Metadata|Install Metrics
 |---|---|---|---
 |Production|r1DVaLfKjc0Y5d6BzqX45SFVss6a4ksvOXqog|No updates released|No installs recorded
-| | | |
 |Staging|YTmVMy0GLCknVu3GVIynTxmfwxJN4ksvOXqog|Label: v5|Active: 11% (2 of 19)
 | | |App Version: 1.0.0|Total: 2
 | | |Mandatory: Yes|
