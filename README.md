@@ -33,9 +33,11 @@ _To confuse you even more, have a diagram:_
 
 <img src="https://github.com/EddyVerbruggen/nativescript-code-push/raw/master/media/NativeScript%20CodePush%20landscape.png" width="570px" height="508px">
 
-### What can be CodePushed?
+### What can (and will) be CodePushed?
 - Anything inside your `/app` folder.
 - Anything inside your `/node_modules` folder.
+
+> 💁‍♂️ Note that we don't actually use those folders, but the `app` folder in `platforms/ios/<appname>/app` and `platforms/android/app/src/main/assets/app`, the benefit of which is we don't "care" if you use Webpack or Uglify or whatever tools you use to minify or scramble your app's assets.
 
 ### What can't (and won't):
 - NativeScript platform updates. Example: bumping `tns-android` from version 2.5.1 to 2.5.2.
@@ -45,13 +47,15 @@ So as long as you don't change versions of dependencies and tns platforms in you
 can push happily. And if you do bump a version of a dependency make sure there are no changed platform libraries.
 
 ## Getting Started
-TODO test this workflow!
+> ⚠️ TODO test this workflow!
 
 #### Globally install the NativeScript-compatible CodePush CLI
 
 ```shell
 npm i -g nativescript-code-push-cli
 ```
+
+> 💁‍♂️ This will also add the global `nativescript-code-push` command to your machine.
 
 #### Login or register with the service
 
@@ -75,7 +79,7 @@ nativescript-code-push app add MyApp-IOS ios nativescript
 nativescript-code-push app add MyApp-Android android nativescript
 ```
 
-> This will show you your deployment keys you'll need when connecting to the CodePush server.
+> 💁‍♂️ This will show you your deployment keys you'll need when connecting to the CodePush server.
 
 #### List your registered apps
 
@@ -89,15 +93,15 @@ nativescript-code-push app ls
 tns plugin add nativescript-code-push
 ```
 
-> If you're restricting access to the internet from within your app, make sure you whitelist `https://nativescript-codepush-server.herokuapp.com`.
+> ⚠️ If you're restricting access to the internet from within your app, make sure you whitelist `https://nativescript-codepush-server.herokuapp.com`.
 
 ## Checking for updates
 With the CodePush plugin installed and configured, the only thing left is to add the necessary code to your app to control when it checks for updates.
 
-If an update is available, it will be silently downloaded, and installed the next time the app is restarted
-(so a cold boot, triggered either explicitly by the end user or by the OS),
-which ensures the least invasive experience for your end users.
-In the future we may add an option to reload the app instantly or upon resuming.
+If an update is available, it will be silently downloaded, and installed.
+ 
+Then based on the provided `InstallMode` the plugin either waits until the next cold start (`InstallMode.ON_NEXT_RESTART`),
+warm restart (`InstallMode.ON_NEXT_RESUME`), or a positive response to a user prompt (`InstallMode.IMMEDIATE`).
 
 > Also check out the [demo](/demo) for a solid example.
 
@@ -140,7 +144,8 @@ CodePush.sync({
 });
 ```
 
-It's recommended to check for updates more than once in a cold boot cycle, so it may be easiest to tie this check to the `resume` event:
+It's recommended to check for updates more than once in a cold boot cycle,
+so it may be easiest to tie this check to the `resume` event:
 
 ```typescript
 import * as application from "tns-core-modules/application";
@@ -164,6 +169,8 @@ The easiest way to do this is to use the `release-nativescript` command in our C
 |targetBinaryVersion|t||Semver expression that specifies the binary app version(s) this release is targeting (e.g. 1.1.0, ~1.2.3).
 |mandatory|m|not set, so "optional"|This specifies whether the update should be considered mandatory or not (e.g. it includes a critical security fix). This attribute is simply round tripped to the client, who can then decide if and how they would like to enforce it. This is flag, so its absence indicates an optional release.
 
+Have a few examples for both platforms:
+
 ### iOS
 
 ```shell
@@ -182,16 +189,41 @@ nativescript-code-push release-nativescript <codepush-android-appname> android -
 ```
 
 ### Tips
-> Make sure to create a release build first, so use the same command that you'd use for app store distribution, just don't send it to the AppStore. You can even webpack bundle and uglify your app, it's all transparent to this plugin. 
+> Make sure to create a *release build* first, so use the same command that you'd use for app store distribution, just don't send it to the AppStore. You can even Webpack and Uglify your app, it's all transparent to this plugin.
 
 > When releasing updates to CodePush, you do not need to bump your app's version since you aren't modifying the app store version at all. CodePush will automatically generate a "label" for each release you make (e.g. `v3`) in order to help identify it within your release history.
 
-### Did folks install the update?
+### Which releases did I create and what are the install metrics?
 Using a command like this will tell you how many apps have the update installed:
 
 ```shell
 nativescript-code-push deployment history <codepush-ios-appname> Staging
 ```
+
+### Give me the details of the current release!
+
+```shell
+nativescript-code-push deployment ls <codepush-ios-appname>
+```
+
+And if you want to dump your deployment keys as well, use:
+
+```shell
+nativescript-code-push deployment ls <codepush-ios-appname> --displayKeys
+```
+
+┌────────────┬───────────────────────────────────────┬───────────────────────────────────────┬───────────────────────┐
+│ Name       │ Deployment Key                        │ Update Metadata                       │ Install Metrics       │
+├────────────┼───────────────────────────────────────┼───────────────────────────────────────┼───────────────────────┤
+│ Production │ r1DVaLfKjc0Y5d6BzqX45SFVss6a4ksvOXqog │ No updates released                   │ No installs recorded  │
+├────────────┼───────────────────────────────────────┼───────────────────────────────────────┼───────────────────────┤
+│ Staging    │ YTmVMy0GLCknVu3GVIynTxmfwxJN4ksvOXqog │ Label: v5                             │ Active: 11% (2 of 19) │
+│            │                                       │ App Version: 1.0.0                    │ Total: 2              │
+│            │                                       │ Mandatory: Yes                        │                       │
+│            │                                       │ Release Time: an hour ago             │                       │
+│            │                                       │ Released By: eddyverbruggen@gmail.com │                       │
+│            │                                       │ Description: Mandatory iOS version!   │                       │
+└────────────┴───────────────────────────────────────┴───────────────────────────────────────┴───────────────────────┘
 
 ## Testing CodePush packages during development
 You may want to play with CodePush before using it in production (smart move!).

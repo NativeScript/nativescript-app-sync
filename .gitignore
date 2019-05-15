@@ -12,9 +12,8 @@ src/*.d.ts
 !src/references.d.ts
 !src/code-push-lib.d.ts
 
-demo/app/*.js
 !demo/karma.conf.js
-!demo/app/tests/*.js
+!demo/demoapp/tests/*.js
 demo/*.d.ts
 !demo/references.d.ts
 demo/lib
