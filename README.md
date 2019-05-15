@@ -200,7 +200,18 @@ Using a command like this will tell you how many apps have the update installed:
 nativescript-code-push deployment history <codepush-ios-appname> Staging
 ```
 
+Which produces something like this:
+
+|Label|Release Time|App Version|Mandatory|Description|Install Metrics
+|---|---|---|---|---|---
+|v2|an hour ago|1.0.0|Yes|Mandatory iOS version!|Active: 11% (2 of 19)
+|||||Total: 2|
+||||||
+|v1|2 hours ago|1.0.0|No|Awesome iOS version!|Active: 26% (5 of 19)
+|||||Total: 5|
+
 ### Give me the details of the current release!
+This dumps the details of the most recent release for both the Staging and Production environments of your app:
 
 ```shell
 nativescript-code-push deployment ls <codepush-ios-appname>
@@ -212,18 +223,18 @@ And if you want to dump your deployment keys as well, use:
 nativescript-code-push deployment ls <codepush-ios-appname> --displayKeys
 ```
 
-┌────────────┬───────────────────────────────────────┬───────────────────────────────────────┬───────────────────────┐
-│ Name       │ Deployment Key                        │ Update Metadata                       │ Install Metrics       │
-├────────────┼───────────────────────────────────────┼───────────────────────────────────────┼───────────────────────┤
-│ Production │ r1DVaLfKjc0Y5d6BzqX45SFVss6a4ksvOXqog │ No updates released                   │ No installs recorded  │
-├────────────┼───────────────────────────────────────┼───────────────────────────────────────┼───────────────────────┤
-│ Staging    │ YTmVMy0GLCknVu3GVIynTxmfwxJN4ksvOXqog │ Label: v5                             │ Active: 11% (2 of 19) │
-│            │                                       │ App Version: 1.0.0                    │ Total: 2              │
-│            │                                       │ Mandatory: Yes                        │                       │
-│            │                                       │ Release Time: an hour ago             │                       │
-│            │                                       │ Released By: eddyverbruggen@gmail.com │                       │
-│            │                                       │ Description: Mandatory iOS version!   │                       │
-└────────────┴───────────────────────────────────────┴───────────────────────────────────────┴───────────────────────┘
+Which produces something like this:
+
+|Name|Deployment Key|Update Metadata|Install Metrics
+|---|---|---|---
+|Production|r1DVaLfKjc0Y5d6BzqX45SFVss6a4ksvOXqog|No updates released|No installs recorded
+| | | |
+|Staging|YTmVMy0GLCknVu3GVIynTxmfwxJN4ksvOXqog|Label: v5|Active: 11% (2 of 19)
+| | |App Version: 1.0.0|Total: 2
+| | |Mandatory: Yes|
+| | |Release Time: an hour ago|
+| | |Released By: eddyverbruggen@gmail.com/
+| | |Description: Mandatory iOS version!/
 
 ## Testing CodePush packages during development
 You may want to play with CodePush before using it in production (smart move!).
