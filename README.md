@@ -29,8 +29,6 @@ The CodePush plugin helps get product improvements in front of your end users in
 
 In order to ensure that your end users always have a functioning version of your app, the CodePush plugin maintains a copy of the previous update, so that in the event that you accidentally push an update which includes a crash, it can automatically roll back. This way, you can rest assured that your newfound release agility won't result in users becoming blocked before you have a chance to roll back on the server. It's a win-win-win!
 
-> ⚠️ TODO test the rollback flow!
-
 _To confuse you even more, have a diagram of the bits involved in this solution:_
 
 <img src="https://github.com/EddyVerbruggen/nativescript-code-push/raw/master/media/NativeScript%20CodePush%20landscape.png" width="570px" height="508px">
@@ -51,7 +49,7 @@ can push happily. And if you do bump a version of a dependency make sure there a
 ## Getting Started
 > ⚠️ TODO test this workflow!
 
-#### Globally install the NativeScript-compatible CodePush CLI
+#### Globally install the NativeScript CodePush CLI
 
 ```shell
 npm i -g nativescript-code-push-cli
@@ -158,7 +156,7 @@ application.on(application.resumeEvent, () => {
 });
 ```
 
-## Releasing updates
+## Releasing an update
 Once your app has been configured and distributed to your users, and you've made some code and/or asset changes,
 it's time to instantly unleash those changes onto your users!
 
@@ -194,8 +192,19 @@ nativescript-code-push release-nativescript <codepush-android-appname> android -
 nativescript-code-push release-nativescript <codepush-android-appname> android --targetBinaryVersion ~1.0.0 # release to users running any 1.x version (default: the exact version in AndroidManifest.xml)
 ```
 
-## CodePush CLI tricks
-Here are a few commands you may find useful:
+## Rolling back an update
+Roll back the latest release (of the `Staging` app, in this case):
+
+```shell
+nativescript-code-push rollback CodePushDemoIOS Staging
+nativescript-code-push rollback <codepush-appname> Staging
+```
+
+Functionally, this will work just like any other CodePush update, but it installs the previous version
+and will no longer push the rolled back version to new devices.
+
+## Gaining insight in past releases
+Here are a few CodePush CLI commands you may find useful:
 
 ### Which releases did I create and what are the install metrics?
 Using a command like this will tell you how many apps have the update installed:
@@ -237,6 +246,13 @@ Which produces something like this:
 | | |Release Time: an hour ago|
 | | |Released By: eddyverbruggen@gmail.com|
 | | |Description: Mandatory iOS version!|
+
+### Clearing the release history
+This won't roll back any releases, but it cleans up the history metadata (of the `Staging` app, in this case):
+
+```shell
+nativescript-code-push deployment clear <codepush-appname> Staging
+```
 
 ## Testing CodePush packages during development
 You may want to play with CodePush before using it in production (smart move!).
