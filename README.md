@@ -171,7 +171,7 @@ The easiest way to do this is to use the `release-nativescript` command in our C
 |deploymentName|d|"Staging"|Deploy to either "Staging" or "Production".
 |description|des|not set|Description of the changes made to the app with this release.
 |targetBinaryVersion|t|`App_Resources`|Semver expression that specifies the binary app version(s) this release is targeting (e.g. 1.1.0, ~1.2.3). The default is the exact version in `App_Resources/iOS/Info.plist` or `App_Resources/Android/AndroidManifest.xml`. 
-|mandatory|m|not set|This specifies whether the update should be considered mandatory or not (e.g. it includes a critical security fix). This attribute is simply round tripped to the client, who can then decide if and how they would like to enforce it. This is flag, so its absence indicates an optional release.
+|mandatory|m|not set|This specifies whether or not the update should be considered "urgent" (e.g. it includes a critical security fix). This attribute is simply round tripped to the client, who can then decide if and how they would like to enforce it. If this flag is not set, the update is considered "not urgent" so you may choose to wait for the next cold boot of the app.
 
 Have a few examples for both platforms:
 
@@ -181,7 +181,7 @@ Have a few examples for both platforms:
 nativescript-code-push release-nativescript <codepush-ios-appname> ios # deploy to Staging
 nativescript-code-push release-nativescript <codepush-ios-appname> ios --d Production # deploy to Production (default: Staging)
 nativescript-code-push release-nativescript <codepush-ios-appname> ios --targetBinaryVersion ~1.0.0 # release to users running any 1.x version (default: the exact version in Info.plist)
-nativescript-code-push release-nativescript <codepush-ios-appname> ios --mandatory --description "My mandatory iOS version" # mandatory release for iOS 
+nativescript-code-push release-nativescript <codepush-ios-appname> ios --mandatory --description "My mandatory iOS version" # a release for iOS that needs to be applied ASAP.
 ```
 
 #### Android
