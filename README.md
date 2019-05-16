@@ -195,6 +195,8 @@ nativescript-code-push release-nativescript <codepush-android-appname> android -
 ## Rolling back an update
 Roll back the latest release (of the `Staging` app, in this case):
 
+> ⚠️ Note that this rolls back the release to the previous CodePush version, NOT the AppStore version (if there was one in between).
+
 ```shell
 nativescript-code-push rollback CodePushDemoIOS Staging
 nativescript-code-push rollback <codepush-appname> Staging
