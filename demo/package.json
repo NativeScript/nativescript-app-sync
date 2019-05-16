@@ -9,6 +9,8 @@
     }
   },
   "scripts": {
+    "codepush.register": "nativescript-code-push register",
+    "codepush.login": "nativescript-code-push login",
     "codepush.list-apps": "nativescript-code-push app ls",
     "codepush.android.stats": "nativescript-code-push deployment ls CodePushDemo-Android --displayKeys",
     "codepush.ios.stats": "nativescript-code-push deployment ls CodePushDemoIOS --displayKeys",
@@ -17,7 +19,8 @@
     "codepush.ios": "nativescript-code-push release-nativescript CodePushDemoIOS ios --description 'Awesome iOS version!'",
     "codepush.ios.mandatory": "nativescript-code-push release-nativescript CodePushDemoIOS ios --mandatory --description 'Mandatory iOS version!'",
     "codepush.ios.buildrelease": "nativescript-code-push release-nativescript CodePushDemoIOS ios --build --isReleaseBuildType",
-    "codepush.android": "nativescript-code-push release-nativescript CodePushDemo-Android android --description 'Awesome Android version!' --targetBinaryVersion 2.0.0",
+    "codepush.android": "nativescript-code-push release-nativescript CodePushDemo-Android android --description 'Awesome Android version!'",
+    "codepush.android.mandatory": "nativescript-code-push release-nativescript CodePushDemo-Android android --mandatory --description 'Awesome Android version!'",
     "codepush.android.v2": "nativescript-code-push release-nativescript CodePushDemo-Android android --description 'Awesome Android version!' --targetBinaryVersion 2.0.0",
     "codepush.android.release": "nativescript-code-push release-nativescript CodePushDemo-Android android -deploymentName Staging --build --isReleaseBuildType --keystorePath \"/Users/eddyverbruggen/Desktop/werkmap/Android dev X-Services/xservices.keystore\" --keystorePassword YOUR_PASSWORD --keystoreAlias xservices --keystoreAliasPassword YOUR_PASSWORD",
     "codepush.ios.rollback": "nativescript-code-push rollback CodePushDemoIOS Staging",

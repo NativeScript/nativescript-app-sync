@@ -47,7 +47,6 @@ So as long as you don't change versions of dependencies and tns platforms in you
 can push happily. And if you do bump a version of a dependency make sure there are no changed platform libraries.
 
 ## Getting Started
-> ⚠️ TODO test this workflow!
 
 #### Globally install the NativeScript CodePush CLI
 
@@ -55,7 +54,7 @@ can push happily. And if you do bump a version of a dependency make sure there a
 npm i -g nativescript-code-push-cli
 ```
 
-> 💁‍♂️ This will also add the global `nativescript-code-push` command to your machine.
+> 💁‍♂️ This will also add the global `nativescript-code-push` command to your machine. You can check the currently installed version with `nativescript-code-push -v`.
 
 #### Login or register with the service
 
@@ -71,10 +70,21 @@ Register if you don't have an account yet:
 nativescript-code-push register
 ```
 
+This will open a browser where you can provide your credentials, after which you can create an access key that
+you can paste in the console.
+
+You should now have a `.nativescript-code-push.config` file in your home folder which will automatically
+authenticate you with the server from now on.
+
+> Note that you _could_ use a that web interface for managing you apps, but the CLI is much more sophisticated, so it's recommended to use the command line interface.
+
 #### Register your app with the service
 Create an app for each OS you target:
 
 ```shell
+nativescript-code-push app add <app-name-you-can-easily-identify> <platform> nativescript
+
+# examples:
 nativescript-code-push app add MyApp-IOS ios nativescript
 nativescript-code-push app add MyApp-Android android nativescript
 ```
@@ -93,7 +103,7 @@ nativescript-code-push app ls
 tns plugin add nativescript-code-push
 ```
 
-> ⚠️ If you're restricting access to the internet from within your app, make sure you whitelist `https://nativescript-codepush-server.herokuapp.com`.
+> ⚠️ If you're restricting access to the internet from within your app, make sure you whitelist the `serverUrl` (`https://nativescript-codepush-server.herokuapp.com` by default) and file server (`https://s3.eu-west-1.amazonaws.com`).
 
 ## Checking for updates
 With the CodePush plugin installed and configured, the only thing left is to add the necessary code to your app to control when it checks for updates.

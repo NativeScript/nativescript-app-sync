@@ -63,7 +63,7 @@
   "homepage": "https://github.com/eddyverbruggen/nativescript-code-push",
   "readmeFilename": "README.md",
   "dependencies": {
-    "nativescript-code-push-cli": "~1.0.3",
+    "nativescript-code-push-cli": "~1.0.4",
     "nativescript-appversion": "~1.4.1",
     "nativescript-hook": "~0.2.5",
     "nativescript-zip": "git+https://github.com/EddyVerbruggen/nativescript-zip.git#330fa2d"
