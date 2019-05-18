@@ -223,7 +223,7 @@ application.on(application.resumeEvent, () => {
 var application = require("tns-core-modules/application");
 
 application.on(application.resumeEvent, function () {
-// call the sync function
+  // call the sync function
 });
 ```
 
@@ -266,8 +266,8 @@ nativescript-code-push release <codepush-android-appname> android --targetBinary
 ```
 
 <details>
-  <summary>Click here to learn more about `--targetBinaryVersion`</summary>
-This specifies the store/binary version of the application you are releasing the update for, so that only users running that version will receive the update, while users running an older and/or newer version of the app binary will not. This is useful for the following reasons:
+  <summary>Click here to learn more about the --targetBinaryVersion param</summary>
+The `targetBinaryVersion` specifies the store/binary version of the application you are releasing the update for, so that only users running that version will receive the update, while users running an older and/or newer version of the app binary will not. This is useful for the following reasons:
 
 1. If a user is running an older binary version, it's possible that there are breaking changes in the CodePush update that wouldn't be compatible with what they're running.
 
@@ -301,19 +301,6 @@ The following table outlines the version value that CodePush expects your update
 *NOTE: If the app store version in the metadata files are missing a patch version, e.g. `2.0`, it will be treated as having a patch version of `0`, i.e. `2.0 -> 2.0.0`. The same is true for app store version equal to plain integer number, `1` will be treated as `1.0.0` in this case.*
 
 </details>
-
-## Rolling back an update
-Roll back the latest release (of the `Staging` app, in this case):
-
-> ⚠️ This rolls back the release to the previous CodePush version, NOT the AppStore version (if there was one in between).
-
-```shell
-nativescript-code-push rollback CodePushDemoIOS Staging
-nativescript-code-push rollback <codepush-appname> Staging
-```
-
-Functionally, this will work just like any other CodePush update, but it installs the previous version
-and will no longer push the rolled back version to new devices.
 
 ## Gaining insight in past releases
 Here are a few CodePush CLI commands you may find useful:
@@ -442,7 +429,9 @@ While you could use the `release` command to "manually" migrate an update from o
 <details>
   <summary>Read this if you want to learn all about rollbacks</summary>
 
-A deployment's release history is immutable, so you cannot delete or remove individual updates once they have been released without deleting all of the deployment's release history. However, if you release an update that is broken or contains unintended features, it is easy to roll it back using the `rollback` command:
+A deployment's release history is immutable, so you cannot delete or remove individual updates once they have been released without deleting all of the deployment's release history.
+However, if you release an update that is broken or contains unintended features,
+it is easy to roll it back using the `rollback` command:
 
 ```shell
 nativescript-code-push rollback <appName> <deploymentName>
@@ -479,7 +468,9 @@ If you would like to rollback a deployment to a release other than the previous 
 nativescript-code-push rollback MyAppiOS Production --targetRelease v34
 ```
 
-*NOTE: The release produced by a rollback will be annotated in the output of the `deployment history` command to help identify them more easily.*
+> ⚠️ This rolls back the release to the previous CodePush version, NOT the AppStore version (if there was one in between).
+
+> 💁‍♂️ The release produced by a rollback will be annotated in the output of the `deployment history` command to help identify them more easily.
 
 </details>
 
