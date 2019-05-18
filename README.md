@@ -16,7 +16,7 @@
 A live-update service for your NativeScript apps!
 
 <details>
- <summary>What this is, and how it works (optional reading).</summary>
+ <summary>*Optional reading: what this is, and how it works*</summary>
 
 A NativeScript app is composed of XML/HTML, CSS and JavaScript files and any accompanying images, which are bundled together by the NativeScript CLI and distributed as part of a platform-specific binary (i.e. an .ipa or .apk file). Once the app is released, updating either the code (e.g. making bug fixes, adding new features) or image assets, requires you to recompile and redistribute the entire binary, which of course, includes any review time associated with the store(s) you are publishing to.
 
@@ -130,7 +130,7 @@ warm restart (`InstallMode.ON_NEXT_RESUME`), or a positive response to a user pr
 
 Note that Apple doesn't want you to prompt the user to restart your app, so use `InstallMode.IMMEDIATE` on iOS only for Enterprise-distributed apps (or when testing your app through TestFlight for instance).
 
-> Check out the [demo](/demo) for a solid example.
+> 💁‍♂️ Check out the [demo](/demo) for a solid example.
 
 ```typescript
 // import the main plugin classes
@@ -202,17 +202,32 @@ CodePush.sync({
 
 </details>
 
+#### When should this check run?
 It's recommended to check for updates more than once in a cold boot cycle,
-so it may be easiest to tie this check to the `resume` event:
+so it may be easiest to tie this check to the `resume` event (which usually also runs on app startup):
 
 ```typescript
 import * as application from "tns-core-modules/application";
+import { CodePush } from "nativescript-code-push";
 
 // add this in some central place that's executed once in a lifecycle
 application.on(application.resumeEvent, () => {
   CodePush.sync(...);
 });
 ```
+
+<details>
+  <summary>Click here to see a JavaScript example</summary>
+  
+```js
+var application = require("tns-core-modules/application");
+
+application.on(application.resumeEvent, function () {
+// call the sync function
+});
+```
+
+</details>
 
 ## Releasing an update
 Once your app has been configured and distributed to your users, and you've made some code and/or asset changes,

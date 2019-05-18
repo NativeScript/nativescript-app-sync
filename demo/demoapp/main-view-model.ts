@@ -20,7 +20,9 @@ export class HelloWorldModel extends Observable {
     this.codePush = new CodePush();
 
     // Check for updates when the app is loaded or resumed
-    application.on(application.resumeEvent, () => this.syncWithCodePushServer());
+    application.on(application.resumeEvent, () => {
+      this.syncWithCodePushServer();
+    });
   }
 
   private syncWithCodePushServer(): void {
