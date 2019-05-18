@@ -16,7 +16,7 @@
 A live-update service for your NativeScript apps!
 
 <details>
- <summary>*Optional reading: what this is, and how it works*</summary>
+ <summary>Optional reading: what this is, and how it works</summary>
 
 A NativeScript app is composed of XML/HTML, CSS and JavaScript files and any accompanying images, which are bundled together by the NativeScript CLI and distributed as part of a platform-specific binary (i.e. an .ipa or .apk file). Once the app is released, updating either the code (e.g. making bug fixes, adding new features) or image assets, requires you to recompile and redistribute the entire binary, which of course, includes any review time associated with the store(s) you are publishing to.
 
@@ -366,14 +366,16 @@ This won't roll back any releases, but it cleans up the history metadata (of the
 nativescript-code-push deployment clear <codepush-appname> Staging
 ```
 
-## Testing CodePush packages during development
+## Advanced topics
+
+### Testing CodePush packages during development
 You may want to play with CodePush before using it in production (smart move!).
 Perform these steps once you've pushed an update and added the `sync` command to your app:
 
 - `$ tns run <platform>`. On an iOS *device* add the `--release` flag so LiveSync doesn't interfere.
 - kill and restart the app after the update is installed
 
-## Patching Update Metadata
+### Patching Update Metadata
 After releasing an update, there may be scenarios where you need to modify one or more of the metadata attributes associated with it
 (e.g. you forgot to mark a critical bug fix as mandatory.
  
@@ -405,7 +407,7 @@ nativescript-code-push patch MyAppiOS Staging -t "1.0.0 - 1.0.5"
 
 </details>
 
-## Promoting Updates
+### Promoting Updates
 <details>
   <summary>Read this if you want to easily promote releases from Staging to Production</summary>
 
@@ -435,7 +437,7 @@ While you could use the `release` command to "manually" migrate an update from o
 
 </details>
 
-## Rolling Back Updates
+### Rolling Back Updates
 
 <details>
   <summary>Read this if you want to learn all about rollbacks</summary>
@@ -481,7 +483,7 @@ nativescript-code-push rollback MyAppiOS Production --targetRelease v34
 
 </details>
 
-## App Collaboration
+### App Collaboration
 <details>
   <summary>Working on one app with multiple developers? Click here!</summary>
 
@@ -520,7 +522,7 @@ nativescript-code-push collaborator ls <appName>
 
 </details>
 
-## Using CodePush behind a proxy
+### Using CodePush behind a proxy
 <details>
   <summary>Click here to read all about Proxy Support</summary>
 By default, the `login` command will automatically look for a system-wide proxy, specified via an `HTTPS_PROXY` or `HTTP_PROXY` environment variable, and use that to connect to the server.
