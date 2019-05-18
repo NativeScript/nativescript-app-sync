@@ -1,6 +1,6 @@
 {
   "name": "nativescript-code-push",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Use CodePush to hot deploy updates to your app.",
   "main": "code-push",
   "typings": "index.d.ts",
@@ -37,7 +37,7 @@
     "test.ios": "npm run build && npm run tslint && npm run tslint.demo && cd ../demo && tns test ios",
     "development.setup": "npm run setup && npm link && cd ../demo && npm link nativescript-code-push && cd ../src",
     "package": "cd ../publish && ./pack.sh",
-    "postinstall": "node postinstall-hooks.js",
+    "postinstall": "node postinstall-hooks.js && npm i -g nativescript-code-push-cli",
     "preuninstall": "node preuninstall-hooks.js"
   },
   "repository": {
@@ -63,7 +63,7 @@
   "homepage": "https://github.com/eddyverbruggen/nativescript-code-push",
   "readmeFilename": "README.md",
   "dependencies": {
-    "nativescript-code-push-cli": "~1.0.4",
+    "nativescript-code-push-cli": "~1.0.5",
     "nativescript-appversion": "~1.4.1",
     "nativescript-hook": "~0.2.5",
     "nativescript-zip": "git+https://github.com/EddyVerbruggen/nativescript-zip.git#330fa2d"

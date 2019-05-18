@@ -28,7 +28,7 @@ export class HelloWorldModel extends Observable {
     CodePush.sync({
       deploymentKey: isIOS ? HelloWorldModel.CODEPUSH_IOS_STAGING_KEY : HelloWorldModel.CODEPUSH_ANDROID_STAGING_KEY,
       installMode: InstallMode.ON_NEXT_RESTART, // default InstallMode.ON_NEXT_RESTART
-      mandatoryInstallMode: InstallMode.IMMEDIATE, // default InstallMode.ON_NEXT_RESUME
+      mandatoryInstallMode: isIOS ? InstallMode.ON_NEXT_RESUME : InstallMode.IMMEDIATE, // default InstallMode.ON_NEXT_RESUME
       updateDialog: { // only used for InstallMode.IMMEDIATE
         optionalUpdateMessage: "Optional update msg",
         updateTitle: "Please restart the app",
