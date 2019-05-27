@@ -15,6 +15,8 @@
 
 A live-update service for your NativeScript apps!
 
+> 📣 UPDATE May 27 2019: we're most likely renaming this solution before officially launching it. Hold your breath!
+
 <details>
  <summary>Optional reading: what this is, and how it works</summary>
 
