@@ -93,11 +93,11 @@ Create an app *for each platform you target*. That way you can roll out release 
 > ⚠️ The `appname` must be unique, and should not contain dashes (`-`).
 
 ```shell
-nativescript-code-push app add <appname> <platform>
+nativescript-code-push app add <appname> <platform> nativescript
 
 # examples:
-nativescript-code-push app add MyAppIOS ios
-nativescript-code-push app add MyAppAndroid android
+nativescript-code-push app add MyAppIOS ios nativescript
+nativescript-code-push app add MyAppAndroid android nativescript
 ```
 
 > 💁‍♂️ This will show you your deployment keys you'll need when connecting to the CodePush server. If you want to list those keys at any later time, use `nativescript-code-push deployment ls <appName> --displayKeys`.
@@ -319,9 +319,9 @@ Which produces something like this:
 |Label|Release Time|App Version|Mandatory|Description|Install Metrics
 |---|---|---|---|---|---
 |v2|an hour ago|1.0.0|Yes|Mandatory iOS version!|Active: 11% (2 of 19)
-|||||Total: 2|
+||||||Total: 2|
 |v1|2 hours ago|1.0.0|No|Awesome iOS version!|Active: 26% (5 of 19)
-|||||Total: 5|
+||||||Total: 5|
 
 ### Give me the details of the current release!
 This dumps the details of the most recent release for both the Staging and Production environments of your app:
@@ -363,6 +363,18 @@ Perform these steps once you've pushed an update and added the `sync` command to
 
 - `$ tns run <platform>`. On an iOS *device* add the `--release` flag so LiveSync doesn't interfere.
 - kill and restart the app after the update is installed
+
+### Running the demo app
+You may also play with CodePush by using its demo app. Here are the steps you need to perform in order to observe an app update:
+- register with the service (`nativescript-code-push register`) and add the demo app to your account (`nativescript-code-push app add <appname> <platform> nativescript`)
+- once the app is registered you will see its deployment keys in the console, use them to update the ones in the [demo](https://github.com/EddyVerbruggen/nativescript-code-push/blob/master/demo/demoapp/main-view-model.ts)
+- go to src and run `npm run preparedemo` - this will build the plugin and add a reference to the demo app
+- prepare an app that will be used as an "update version" (for example, uncomment one of the CODEPUSH labels and comment the APPSTORE label), then run `tns build <platform>`
+- release the update (`nativescript-code-push release <appname> <platform>`)
+- you can ensure it appears in the list with updates (`nativescript-code-push deployment history <appname> Staging`)
+- prepare an app that will be used as an "official release version" (for example, comment the CODEPUSH label and uncomment the APPSTORE label), then run `tns run <platform>`
+- when the app is deployed on the device, you should see the "official release version" along with information about an installed update
+- close the app (and remove it from device's recent apps to ensure its next start will be a cold start) and run it again - you should now see the "update version" of the app
 
 ### Patching Update Metadata
 After releasing an update, there may be scenarios where you need to modify one or more of the metadata attributes associated with it
