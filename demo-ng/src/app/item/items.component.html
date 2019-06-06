@@ -1,0 +1,10 @@
+<!--<ActionBar title="CodePush version" class="action-bar"></ActionBar>-->
+<ActionBar title="AppStore version" class="action-bar"></ActionBar>
+
+<GridLayout class="page">
+  <ListView [items]="items" class="list-group">
+    <ng-template let-item="item">
+      <Label [nsRouterLink]="['/item', item.id]" [text]="item.name" class="list-group-item"></Label>
+    </ng-template>
+  </ListView>
+</GridLayout>

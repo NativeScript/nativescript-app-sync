@@ -1,0 +1,63 @@
+{
+  "nativescript": {
+    "id": "org.nativescript.demong",
+    "tns-android": {
+      "version": "5.3.1"
+    },
+    "tns-ios": {
+      "version": "5.3.1"
+    }
+  },
+  "description": "NativeScript Application",
+  "license": "SEE LICENSE IN <your-license-filename>",
+  "repository": "<fill-your-repository-here>",
+  "scripts": {
+    "codepush.register": "nativescript-code-push register",
+    "codepush.login": "nativescript-code-push login",
+    "codepush.list-apps": "nativescript-code-push app ls",
+    "codepush.android.stats": "nativescript-code-push deployment ls CodePushDemoNgAndroid --displayKeys",
+    "codepush.ios.stats": "nativescript-code-push deployment ls CodePushDemoNgIOS --displayKeys",
+    "codepush.android.history": "nativescript-code-push deployment history CodePushDemoNgAndroid Staging",
+    "codepush.ios.history": "nativescript-code-push deployment history CodePushDemoNgIOS Staging",
+    "codepush.ios": "nativescript-code-push release CodePushDemoNgIOS ios --description 'Awesome iOS version!'",
+    "codepush.ios.mandatory": "nativescript-code-push release CodePushDemoNgIOS ios --mandatory --description 'Mandatory iOS version!'",
+    "codepush.ios.buildrelease": "nativescript-code-push release CodePushDemoNgIOS ios --build --isReleaseBuildType",
+    "codepush.android": "nativescript-code-push release CodePushDemoNgAndroid android --description 'Awesome Android version!'",
+    "codepush.android.mandatory": "nativescript-code-push release CodePushDemoNgAndroid android --mandatory --description 'Awesome Android version!'",
+    "codepush.android.v2": "nativescript-code-push release CodePushDemoNgAndroid android --description 'Awesome Android version!' --targetBinaryVersion 2.0.0",
+    "codepush.android.release": "nativescript-code-push release CodePushDemoNgAndroid android -deploymentName Staging --build --isReleaseBuildType --keystorePath \"/Users/eddyverbruggen/Desktop/werkmap/Android dev X-Services/xservices.keystore\" --keystorePassword YOUR_PASSWORD --keystoreAlias xservices --keystoreAliasPassword YOUR_PASSWORD",
+    "codepush.ios.rollback": "nativescript-code-push rollback CodePushDemoNgIOS Staging",
+    "codepush.ios.clear": "nativescript-code-push deployment clear CodePushDemoNgIOS Staging",
+    "codepush.android.rollback": "nativescript-code-push rollback CodePushDemoNgAndroid Staging",
+    "codepush.android.clear": "nativescript-code-push deployment clear CodePushDemoNgAndroid Staging",
+    "build.plugin": "cd ../src && npm i && npm run build && npm run package",
+    "ci.tslint": "npm i && tslint --config '../tslint.json' 'demoapp/**/*.ts' --exclude '**/node_modules/**' --exclude '**/typings/**'"
+  },
+  "dependencies": {
+    "@angular/animations": "~7.2.0",
+    "@angular/common": "~7.2.0",
+    "@angular/compiler": "~7.2.0",
+    "@angular/core": "~7.2.0",
+    "@angular/forms": "~7.2.0",
+    "@angular/http": "~7.2.0",
+    "@angular/platform-browser": "~7.2.0",
+    "@angular/platform-browser-dynamic": "~7.2.0",
+    "@angular/router": "~7.2.0",
+    "nativescript-angular": "~7.2.0",
+    "nativescript-code-push": "file:../publish/package/nativescript-code-push-2.1.0.tgz",
+    "nativescript-theme-core": "~1.0.4",
+    "reflect-metadata": "~0.1.12",
+    "rxjs": "~6.3.0",
+    "tns-core-modules": "~5.3.0",
+    "zone.js": "~0.8.26"
+  },
+  "devDependencies": {
+    "@angular/compiler-cli": "~7.2.0",
+    "@nativescript/schematics": "~0.5.0",
+    "@ngtools/webpack": "~7.2.0",
+    "nativescript-dev-typescript": "~0.9.0",
+    "nativescript-dev-webpack": "~0.21.0"
+  },
+  "gitHead": "803cec054c44c99eaa59cdc267993e6346f6cb3a",
+  "readme": "NativeScript Application"
+}

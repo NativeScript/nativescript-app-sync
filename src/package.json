@@ -1,6 +1,6 @@
 {
   "name": "nativescript-code-push",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Use CodePush to hot deploy updates to your app.",
   "main": "code-push",
   "typings": "index.d.ts",
@@ -25,10 +25,12 @@
   "scripts": {
     "build": "tsc --skipLibCheck",
     "demo.ios": "npm run preparedemo && cd ../demo && tns run ios",
-    "TODO--demo-ng.ios": "npm run preparedemo && cd ../demo && tns run ios",
-    "demo.ios.device": "npm run preparedemo && cd ../demo && tns run ios --release",
+    "demo.ios.release": "npm run preparedemo && cd ../demo && tns run ios --release",
+    "demo-ng.ios": "npm run preparedemo-ng && cd ../demo-ng && tns run ios",
     "demo.android": "npm run preparedemo && cd ../demo && tns run android",
+    "demo-ng.android": "npm run preparedemo-ng && cd ../demo-ng && tns run android",
     "preparedemo": "npm run build && npm run package && cd ../demo && tns plugin add ../publish/package/*.tgz && rimraf platforms/android",
+    "preparedemo-ng": "npm run build && npm run package && cd ../demo-ng && tns plugin add ../publish/package/*.tgz && rimraf platforms/android",
     "setup": "npm i && cd ../demo && npm i && cd ../src && npm run build",
     "tslint": "tslint *.ts",
     "tslint.demo": "tslint ../demo/app/*.ts",
@@ -64,7 +66,7 @@
   "homepage": "https://github.com/eddyverbruggen/nativescript-code-push",
   "readmeFilename": "README.md",
   "dependencies": {
-    "nativescript-code-push-cli": "~1.0.6",
+    "nativescript-code-push-cli": "~1.0.7",
     "nativescript-appversion": "~1.4.1",
     "nativescript-hook": "~0.2.5",
     "nativescript-zip": "git+https://github.com/EddyVerbruggen/nativescript-zip.git#330fa2d"
