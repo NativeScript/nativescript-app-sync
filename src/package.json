@@ -25,6 +25,7 @@
   "scripts": {
     "build": "tsc --skipLibCheck",
     "demo.ios": "npm run preparedemo && cd ../demo && tns run ios",
+    "TODO--demo-ng.ios": "npm run preparedemo && cd ../demo && tns run ios",
     "demo.ios.device": "npm run preparedemo && cd ../demo && tns run ios --release",
     "demo.android": "npm run preparedemo && cd ../demo && tns run android",
     "preparedemo": "npm run build && npm run package && cd ../demo && tns plugin add ../publish/package/*.tgz && rimraf platforms/android",
@@ -63,7 +64,7 @@
   "homepage": "https://github.com/eddyverbruggen/nativescript-code-push",
   "readmeFilename": "README.md",
   "dependencies": {
-    "nativescript-code-push-cli": "~1.0.5",
+    "nativescript-code-push-cli": "~1.0.6",
     "nativescript-appversion": "~1.4.1",
     "nativescript-hook": "~0.2.5",
     "nativescript-zip": "git+https://github.com/EddyVerbruggen/nativescript-zip.git#330fa2d"

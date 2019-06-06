@@ -93,11 +93,11 @@ Create an app *for each platform you target*. That way you can roll out release 
 > ⚠️ The `appname` must be unique, and should not contain dashes (`-`).
 
 ```shell
-nativescript-code-push app add <appname> <platform> nativescript
+nativescript-code-push app add <appname> <platform>
 
 # examples:
-nativescript-code-push app add MyAppIOS ios nativescript
-nativescript-code-push app add MyAppAndroid android nativescript
+nativescript-code-push app add MyAppIOS ios
+nativescript-code-push app add MyAppAndroid android
 ```
 
 > 💁‍♂️ This will show you your deployment keys you'll need when connecting to the CodePush server. If you want to list those keys at any later time, use `nativescript-code-push deployment ls <appName> --displayKeys`.
@@ -106,7 +106,7 @@ nativescript-code-push app add MyAppAndroid android nativescript
 
 > 💁‍♂️ Want to rename your app? At any time, use the command: `nativescript-code-push app rename <oldName> <newName>`
 
-> 💁‍♂️ Want to delete an app? At any time, use the command: `nativescript-code-push app rm <appName>` - this means any apps that have been configured to use it will obviously stop receiving updates.
+> 💁‍♂️ Want to delete an app? At any time, use the command: `nativescript-code-push app remove <appName>` - this means any apps that have been configured to use it will obviously stop receiving updates.
 
 #### List your registered apps
 
