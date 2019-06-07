@@ -366,7 +366,7 @@ Perform these steps once you've pushed an update and added the `sync` command to
 
 ### Running the demo app
 You may also play with CodePush by using its demo app. Here are the steps you need to perform in order to observe an app update:
-- register with the service (`nativescript-code-push register`) and add the demo app to your account (`nativescript-code-push app add <appname> <platform> nativescript`)
+- register with the service (`nativescript-code-push register`) and add the demo app to your account (`nativescript-code-push app add <appname> <platform>`)
 - once the app is registered you will see its deployment keys in the console, use them to update the ones in the [demo](https://github.com/EddyVerbruggen/nativescript-code-push/blob/master/demo/demoapp/main-view-model.ts)
 - go to src and run `npm run preparedemo` - this will build the plugin and add a reference to the demo app
 - prepare an app that will be used as an "update version" (for example, uncomment one of the CODEPUSH labels and comment the APPSTORE label), then run `tns build <platform>`
