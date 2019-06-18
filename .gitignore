@@ -1,9 +1,13 @@
 .vscode
 .idea
+.gradle
 .DS_Store
 *.js
 *.js.map
 *.log
+
+src/platforms/ios_lib/AppSync/AppSync.xcodeproj/project.xcworkspace
+src/platforms/ios_lib/AppSync/AppSync.xcodeproj/xcuserdata
 
 src/*.d.ts
 !src/*install-hooks.js

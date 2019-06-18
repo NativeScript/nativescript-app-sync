@@ -1,35 +1,34 @@
 {
   "nativescript": {
-    "id": "org.nativescript.demong",
+    "id": "org.nativescript.demong.AppSync",
     "tns-android": {
-      "version": "5.3.1"
+      "version": "5.4.0"
     },
     "tns-ios": {
-      "version": "5.3.1"
+      "version": "5.4.2"
     }
   },
   "description": "NativeScript Application",
-  "license": "SEE LICENSE IN <your-license-filename>",
-  "repository": "<fill-your-repository-here>",
+  "license": "MIT",
   "scripts": {
-    "codepush.register": "nativescript-code-push register",
-    "codepush.login": "nativescript-code-push login",
-    "codepush.list-apps": "nativescript-code-push app ls",
-    "codepush.android.stats": "nativescript-code-push deployment ls CodePushDemoNgAndroid --displayKeys",
-    "codepush.ios.stats": "nativescript-code-push deployment ls CodePushDemoNgIOS --displayKeys",
-    "codepush.android.history": "nativescript-code-push deployment history CodePushDemoNgAndroid Staging",
-    "codepush.ios.history": "nativescript-code-push deployment history CodePushDemoNgIOS Staging",
-    "codepush.ios": "nativescript-code-push release CodePushDemoNgIOS ios --description 'Awesome iOS version!'",
-    "codepush.ios.mandatory": "nativescript-code-push release CodePushDemoNgIOS ios --mandatory --description 'Mandatory iOS version!'",
-    "codepush.ios.buildrelease": "nativescript-code-push release CodePushDemoNgIOS ios --build --isReleaseBuildType",
-    "codepush.android": "nativescript-code-push release CodePushDemoNgAndroid android --description 'Awesome Android version!'",
-    "codepush.android.mandatory": "nativescript-code-push release CodePushDemoNgAndroid android --mandatory --description 'Awesome Android version!'",
-    "codepush.android.v2": "nativescript-code-push release CodePushDemoNgAndroid android --description 'Awesome Android version!' --targetBinaryVersion 2.0.0",
-    "codepush.android.release": "nativescript-code-push release CodePushDemoNgAndroid android -deploymentName Staging --build --isReleaseBuildType --keystorePath \"/Users/eddyverbruggen/Desktop/werkmap/Android dev X-Services/xservices.keystore\" --keystorePassword YOUR_PASSWORD --keystoreAlias xservices --keystoreAliasPassword YOUR_PASSWORD",
-    "codepush.ios.rollback": "nativescript-code-push rollback CodePushDemoNgIOS Staging",
-    "codepush.ios.clear": "nativescript-code-push deployment clear CodePushDemoNgIOS Staging",
-    "codepush.android.rollback": "nativescript-code-push rollback CodePushDemoNgAndroid Staging",
-    "codepush.android.clear": "nativescript-code-push deployment clear CodePushDemoNgAndroid Staging",
+    "appsync.register": "nativescript-app-sync register",
+    "appsync.login": "nativescript-app-sync login",
+    "appsync.list-apps": "nativescript-app-sync app ls",
+    "appsync.android.stats": "nativescript-app-sync deployment ls AppSyncDemoNgAndroid --displayKeys",
+    "appsync.ios.stats": "nativescript-app-sync deployment ls AppSyncDemoNgIOS --displayKeys",
+    "appsync.android.history": "nativescript-app-sync deployment history AppSyncDemoNgAndroid Staging",
+    "appsync.ios.history": "nativescript-app-sync deployment history AppSyncDemoNgIOS Staging",
+    "appsync.ios": "nativescript-app-sync release AppSyncDemoNgIOS ios --description 'Awesome iOS ng version!'",
+    "appsync.ios.mandatory": "nativescript-app-sync release AppSyncDemoNgIOS ios --mandatory --description 'Mandatory iOS ng version!'",
+    "appsync.ios.buildrelease": "nativescript-app-sync release AppSyncDemoNgIOS ios --build --isReleaseBuildType",
+    "appsync.android": "nativescript-app-sync release AppSyncDemoNgAndroid android --description 'Awesome Android ng version!'",
+    "appsync.android.mandatory": "nativescript-app-sync release AppSyncDemoNgAndroid android --mandatory --description 'Awesome Android mandatory ng version!'",
+    "appsync.android.v2": "nativescript-app-sync release AppSyncDemoNgAndroid android --description 'Awesome Android ng version!' --targetBinaryVersion 2.0.0",
+    "appsync.android.release": "nativescript-app-sync release AppSyncDemoNgAndroid android -deploymentName Staging --build --isReleaseBuildType --keystorePath \"/Users/eddyverbruggen/Desktop/werkmap/Android dev X-Services/xservices.keystore\" --keystorePassword YOUR_PASSWORD --keystoreAlias xservices --keystoreAliasPassword YOUR_PASSWORD",
+    "appsync.ios.rollback": "nativescript-app-sync rollback AppSyncDemoNgIOS Staging",
+    "appsync.ios.clear": "nativescript-app-sync deployment clear AppSyncDemoNgIOS Staging",
+    "appsync.android.rollback": "nativescript-app-sync rollback AppSyncDemoNgAndroid Staging",
+    "appsync.android.clear": "nativescript-app-sync deployment clear AppSyncDemoNgAndroid Staging",
     "build.plugin": "cd ../src && npm i && npm run build && npm run package",
     "ci.tslint": "npm i && tslint --config '../tslint.json' 'demoapp/**/*.ts' --exclude '**/node_modules/**' --exclude '**/typings/**'"
   },
@@ -44,11 +43,11 @@
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
     "nativescript-angular": "~7.2.0",
-    "nativescript-code-push": "file:../publish/package/nativescript-code-push-2.0.2.tgz",
+    "nativescript-app-sync": "file:../publish/package/nativescript-app-sync-1.0.0.tgz",
     "nativescript-theme-core": "~1.0.4",
     "reflect-metadata": "~0.1.12",
     "rxjs": "~6.3.0",
-    "tns-core-modules": "~5.3.0",
+    "tns-core-modules": "~5.4.2",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
@@ -56,8 +55,6 @@
     "@nativescript/schematics": "~0.5.0",
     "@ngtools/webpack": "~7.2.0",
     "nativescript-dev-typescript": "~0.9.0",
-    "nativescript-dev-webpack": "~0.21.0"
-  },
-  "gitHead": "803cec054c44c99eaa59cdc267993e6346f6cb3a",
-  "readme": "NativeScript Application"
+    "nativescript-dev-webpack": "~0.24.1"
+  }
 }

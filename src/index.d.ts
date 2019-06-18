@@ -1,1 +1,1 @@
-export * from "./code-push";
+export * from "./app-sync";

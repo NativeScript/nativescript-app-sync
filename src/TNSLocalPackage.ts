@@ -4,18 +4,18 @@ import * as fs from "tns-core-modules/file-system";
 import * as fsa from "tns-core-modules/file-system/file-system-access";
 import { isIOS } from "tns-core-modules/platform";
 import * as utils from "tns-core-modules/utils/utils";
-import { CodePush } from "./code-push";
+import { AppSync } from "./app-sync";
 import { TNSAcquisitionManager } from "./TNSAcquisitionManager";
 
 declare const com: any;
 
 export class TNSLocalPackage implements ILocalPackage {
-  // this is the app version at the moment the CodePush package was installed
-  private static CODEPUSH_CURRENT_APPVERSION: string = "CODEPUSH_CURRENT_APPVERSION"; // same as native
-  private static CODEPUSH_CURRENT_PACKAGE: string = "CODEPUSH_CURRENT_PACKAGE";
-  // this is the build timestamp of the app at the moment the CodePush package was installed
-  private static CODEPUSH_CURRENT_APPBUILDTIME: string = "CODEPUSH_CURRENT_APPBUILDTIME"; // same as native
-  private static CODEPUSH_APK_BUILD_TIME: string = "CODE_PUSH_APK_BUILD_TIME"; // same as include.gradle
+  // this is the app version at the moment the AppSync package was installed
+  private static APPSYNC_CURRENT_APPVERSION: string = "APPSYNC_CURRENT_APPVERSION"; // same as native
+  private static APPSYNC_CURRENT_PACKAGE: string = "APPSYNC_CURRENT_PACKAGE";
+  // this is the build timestamp of the app at the moment the AppSync package was installed
+  private static APPSYNC_CURRENT_APPBUILDTIME: string = "APPSYNC_CURRENT_APPBUILDTIME"; // same as native
+  private static APPSYNC_APK_BUILD_TIME: string = "APPSYNC_APK_BUILD_TIME"; // same as include.gradle
 
   localPath: string;
   isFirstRun: boolean;
@@ -31,11 +31,11 @@ export class TNSLocalPackage implements ILocalPackage {
 
   install(installSuccess: SuccessCallback<InstallMode>, errorCallback?: ErrorCallback, installOptions?: InstallOptions): void {
     let appFolderPath = fs.knownFolders.documents().path + "/app";
-    let unzipFolderPath = fs.knownFolders.documents().path + "/CodePush-Unzipped/" + this.packageHash;
-    let codePushFolder = fs.knownFolders.documents().path + "/CodePush";
-    // make sure the CodePush folder exists
-    fs.Folder.fromPath(codePushFolder);
-    let newPackageFolderPath = fs.knownFolders.documents().path + "/CodePush/" + this.packageHash;
+    let unzipFolderPath = fs.knownFolders.documents().path + "/AppSync-Unzipped/" + this.packageHash;
+    let appSyncFolder = fs.knownFolders.documents().path + "/AppSync";
+    // make sure the AppSync folder exists
+    fs.Folder.fromPath(appSyncFolder);
+    let newPackageFolderPath = fs.knownFolders.documents().path + "/AppSync/" + this.packageHash;
     // in case of a rollback make 'newPackageFolderPath' could already exist, so check and remove
     if (fs.Folder.exists(newPackageFolderPath)) {
       fs.Folder.fromPath(newPackageFolderPath).removeSync();
@@ -48,10 +48,10 @@ export class TNSLocalPackage implements ILocalPackage {
         return;
       }
 
-      const previousHash = appSettings.getString(CodePush.CURRENT_HASH_KEY, null);
-      const isDiffPackage = fs.File.exists(unzipFolderPath + "/hotcodepush.json");
+      const previousHash = appSettings.getString(AppSync.CURRENT_HASH_KEY, null);
+      const isDiffPackage = fs.File.exists(unzipFolderPath + "/hotappsync.json");
       if (isDiffPackage) {
-        const copySourceFolder = previousHash === null ? appFolderPath : fs.knownFolders.documents().path + "/CodePush/" + previousHash;
+        const copySourceFolder = previousHash === null ? appFolderPath : fs.knownFolders.documents().path + "/AppSync/" + previousHash;
         if (!TNSLocalPackage.copyFolder(copySourceFolder, newPackageFolderPath)) {
           errorCallback && errorCallback(new Error(`Failed to copy ${copySourceFolder} to ${newPackageFolderPath}`));
           return;
@@ -68,7 +68,7 @@ export class TNSLocalPackage implements ILocalPackage {
       }
 
       if (!isIOS) {
-        let pendingFolderPath = fs.knownFolders.documents().path + "/CodePush/pending";
+        let pendingFolderPath = fs.knownFolders.documents().path + "/AppSync/pending";
         if (fs.Folder.exists(pendingFolderPath)) {
           fs.Folder.fromPath(pendingFolderPath).removeSync();
         }
@@ -78,7 +78,7 @@ export class TNSLocalPackage implements ILocalPackage {
         }
       }
 
-      appSettings.setString(TNSLocalPackage.CODEPUSH_CURRENT_APPVERSION, this.appVersion);
+      appSettings.setString(TNSLocalPackage.APPSYNC_CURRENT_APPVERSION, this.appVersion);
       TNSLocalPackage.saveCurrentPackage(this);
 
       let buildTime: string;
@@ -88,10 +88,10 @@ export class TNSLocalPackage implements ILocalPackage {
         const fileDate = new fsa.FileSystemAccess().getLastModified(plist);
         buildTime = "" + fileDate.getTime();
       } else {
-        const codePushApkBuildTimeStringId = utils.ad.resources.getStringId(TNSLocalPackage.CODEPUSH_APK_BUILD_TIME);
-        buildTime = utils.ad.getApplicationContext().getResources().getString(codePushApkBuildTimeStringId);
+        const appSyncApkBuildTimeStringId = utils.ad.resources.getStringId(TNSLocalPackage.APPSYNC_APK_BUILD_TIME);
+        buildTime = utils.ad.getApplicationContext().getResources().getString(appSyncApkBuildTimeStringId);
       }
-      appSettings.setString(TNSLocalPackage.CODEPUSH_CURRENT_APPBUILDTIME, buildTime);
+      appSettings.setString(TNSLocalPackage.APPSYNC_CURRENT_APPBUILDTIME, buildTime);
       //noinspection JSIgnoredPromiseFromCall (removal is async, don't really care if it fails)
       fs.File.fromPath(this.localPath).remove();
 
@@ -103,14 +103,14 @@ export class TNSLocalPackage implements ILocalPackage {
         unzipFolderPath,
         // TODO expose through plugin API (not that it's super useful)
         (percent: number) => {
-          // console.log("CodePush package unzip progress: " + percent);
+          // console.log("AppSync package unzip progress: " + percent);
         },
         onUnzipComplete);
   }
 
   static unzip(archive: string, destination: string, progressCallback: (progressPercent) => void, completionCallback: (success: boolean, error?: string) => void): void {
     if (isIOS) {
-      TNSCodePush.unzipFileAtPathToDestinationOnProgressOnComplete(
+      TNSAppSync.unzipFileAtPathToDestinationOnProgressOnComplete(
           archive,
           destination,
           (itemNr: number, totalNr: number) => {
@@ -138,29 +138,29 @@ export class TNSLocalPackage implements ILocalPackage {
       return;
     }
 
-    appSettings.remove(TNSLocalPackage.CODEPUSH_CURRENT_APPVERSION);
-    appSettings.remove(TNSLocalPackage.CODEPUSH_CURRENT_APPBUILDTIME);
+    appSettings.remove(TNSLocalPackage.APPSYNC_CURRENT_APPVERSION);
+    appSettings.remove(TNSLocalPackage.APPSYNC_CURRENT_APPBUILDTIME);
 
-    const codePushFolder = fs.Folder.fromPath(fs.knownFolders.documents().path + "/CodePush");
+    const appSyncFolder = fs.Folder.fromPath(fs.knownFolders.documents().path + "/AppSync");
     //noinspection JSIgnoredPromiseFromCall
-    codePushFolder.clear();
+    appSyncFolder.clear();
   }
 
   private static saveCurrentPackage(pack: IPackage): void {
-    appSettings.setString(TNSLocalPackage.CODEPUSH_CURRENT_PACKAGE, JSON.stringify(pack));
+    appSettings.setString(TNSLocalPackage.APPSYNC_CURRENT_PACKAGE, JSON.stringify(pack));
   }
 
   static getCurrentPackage(): IPackage {
-    const packageStr: string = appSettings.getString(TNSLocalPackage.CODEPUSH_CURRENT_PACKAGE, null);
+    const packageStr: string = appSettings.getString(TNSLocalPackage.APPSYNC_CURRENT_PACKAGE, null);
     return packageStr === null ? null : JSON.parse(packageStr);
   }
 
   private static copyFolder(fromPath: string, toPath: string): boolean {
     if (isIOS) {
-      return TNSCodePush.copyEntriesInFolderDestFolderError(fromPath, toPath);
+      return TNSAppSync.copyEntriesInFolderDestFolderError(fromPath, toPath);
     } else {
       try {
-        com.tns.TNSCodePush.copyDirectoryContents(fromPath, toPath);
+        com.tns.TNSAppSync.copyDirectoryContents(fromPath, toPath);
         return true;
       } catch (error) {
         console.log(`Copy error on Android: ${error}`);

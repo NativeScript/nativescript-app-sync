@@ -1,4 +1,4 @@
-Custom CodePush framework for Android apps.
+Custom AppSync framework for Android apps.
 
 Using this wrapper to more easily copy some files around and (optionally) move stuff to a background thread.
 

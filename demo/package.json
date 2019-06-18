@@ -1,40 +1,40 @@
 {
   "nativescript": {
-    "id": "org.nativescript.plugindemo.CodePush",
+    "id": "org.nativescript.plugindemo.AppSync",
     "tns-ios": {
-      "version": "5.3.1"
+      "version": "5.4.2"
     },
     "tns-android": {
-      "version": "5.3.1"
+      "version": "5.4.0"
     }
   },
   "scripts": {
-    "codepush.register": "nativescript-code-push register",
-    "codepush.login": "nativescript-code-push login",
-    "codepush.list-apps": "nativescript-code-push app ls",
-    "codepush.android.stats": "nativescript-code-push deployment ls CodePushDemo-Android --displayKeys",
-    "codepush.ios.stats": "nativescript-code-push deployment ls CodePushDemoIOS --displayKeys",
-    "codepush.android.history": "nativescript-code-push deployment history CodePushDemo-Android Staging",
-    "codepush.ios.history": "nativescript-code-push deployment history CodePushDemoIOS Staging",
-    "codepush.ios": "nativescript-code-push release CodePushDemoIOS ios --description 'Awesome iOS version!'",
-    "codepush.ios.mandatory": "nativescript-code-push release CodePushDemoIOS ios --mandatory --description 'Mandatory iOS version!'",
-    "codepush.ios.buildrelease": "nativescript-code-push release CodePushDemoIOS ios --build --isReleaseBuildType",
-    "codepush.android": "nativescript-code-push release CodePushDemo-Android android --description 'Awesome Android version!'",
-    "codepush.android.mandatory": "nativescript-code-push release CodePushDemo-Android android --mandatory --description 'Awesome Android version!'",
-    "codepush.android.v2": "nativescript-code-push release CodePushDemo-Android android --description 'Awesome Android version!' --targetBinaryVersion 2.0.0",
-    "codepush.android.release": "nativescript-code-push release CodePushDemo-Android android -deploymentName Staging --build --isReleaseBuildType --keystorePath \"/Users/eddyverbruggen/Desktop/werkmap/Android dev X-Services/xservices.keystore\" --keystorePassword YOUR_PASSWORD --keystoreAlias xservices --keystoreAliasPassword YOUR_PASSWORD",
-    "codepush.ios.rollback": "nativescript-code-push rollback CodePushDemoIOS Staging",
-    "codepush.ios.clear": "nativescript-code-push deployment clear CodePushDemoIOS Staging",
-    "codepush.android.rollback": "nativescript-code-push rollback CodePushDemo-Android Staging",
-    "codepush.android.clear": "nativescript-code-push deployment clear CodePushDemo-Android Staging",
+    "appsync.register": "nativescript-app-sync register",
+    "appsync.login": "nativescript-app-sync login",
+    "appsync.list-apps": "nativescript-app-sync app ls",
+    "appsync.android.stats": "nativescript-app-sync deployment ls AppSyncDemoAndroid --displayKeys",
+    "appsync.ios.stats": "nativescript-app-sync deployment ls AppSyncDemoIOS --displayKeys",
+    "appsync.android.history": "nativescript-app-sync deployment history AppSyncDemoAndroid Staging",
+    "appsync.ios.history": "nativescript-app-sync deployment history AppSyncDemoIOS Staging",
+    "appsync.ios": "nativescript-app-sync release AppSyncDemoIOS ios --description 'AppSync iOS version!'",
+    "appsync.ios.mandatory": "nativescript-app-sync release AppSyncDemoIOS ios --mandatory --description 'Mandatory iOS version!'",
+    "appsync.ios.buildrelease": "nativescript-app-sync release AppSyncDemoIOS ios --build --isReleaseBuildType",
+    "appsync.android": "nativescript-app-sync release AppSyncDemoAndroid android --description 'AppSync Android version!'",
+    "appsync.android.mandatory": "nativescript-app-sync release AppSyncDemoAndroid android --mandatory --description 'Mandatory AppSync Android version!'",
+    "appsync.android.v2": "nativescript-app-sync release AppSyncDemoAndroid android --description 'Awesome Android version!' --targetBinaryVersion 2.0.0",
+    "appsync.android.release": "nativescript-app-sync release AppSyncDemoAndroid android -deploymentName Staging --build --isReleaseBuildType --keystorePath \"/Users/eddyverbruggen/Desktop/werkmap/Android dev X-Services/xservices.keystore\" --keystorePassword YOUR_PASSWORD --keystoreAlias xservices --keystoreAliasPassword YOUR_PASSWORD",
+    "appsync.ios.rollback": "nativescript-app-sync rollback AppSyncDemoIOS Staging",
+    "appsync.ios.clear": "nativescript-app-sync deployment clear AppSyncDemoIOS Staging",
+    "appsync.android.rollback": "nativescript-app-sync rollback AppSyncDemoAndroid Staging",
+    "appsync.android.clear": "nativescript-app-sync deployment clear AppSyncDemoAndroid Staging",
     "build.plugin": "cd ../src && npm i && npm run build && npm run package",
     "ci.tslint": "npm i && tslint --config '../tslint.json' 'demoapp/**/*.ts' --exclude '**/node_modules/**' --exclude '**/typings/**'"
   },
   "dependencies": {
-    "nativescript-code-push": "file:../publish/package/nativescript-code-push-2.0.2.tgz",
+    "nativescript-app-sync": "file:../publish/package/nativescript-app-sync-1.0.0.tgz",
     "nativescript-theme-core": "~1.0.4",
     "nativescript-unit-test-runner": "^0.3.4",
-    "tns-core-modules": "~5.3.2"
+    "tns-core-modules": "~5.4.2"
   },
   "devDependencies": {
     "babel-traverse": "6.26.0",
@@ -48,8 +48,8 @@
     "lazy": "1.0.11",
     "nativescript-dev-typescript": "~0.9.0",
     "nativescript-dev-webpack": "^0.21.2",
-    "tns-platform-declarations": "~5.3.2",
+    "tns-platform-declarations": "~5.4.2",
     "tslint": "~5.4.3",
-    "typescript": "~3.2.4"
+    "typescript": "~3.3.0"
   }
 }

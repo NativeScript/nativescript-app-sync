@@ -1,5 +1,5 @@
 android {
     buildTypes.each {
-        it.resValue "string", "CODE_PUSH_APK_BUILD_TIME", Long.toString(System.currentTimeMillis())
+        it.resValue "string", "APPSYNC_APK_BUILD_TIME", Long.toString(System.currentTimeMillis())
     }
 }

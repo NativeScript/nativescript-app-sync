@@ -23,9 +23,9 @@ export class TNSRequester implements Requester {
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "X-CodePush-Plugin-Name": packageJson.name,
-        "X-CodePush-Plugin-Version": packageJson.version,
-        "X-CodePush-SDK-Version": packageJson.dependencies["nativescript-code-push-cli"]
+        "X-NativeScript-AppSync-Plugin-Name": packageJson.name,
+        "X-NativeScript-AppSync-Plugin-Version": packageJson.version,
+        "X-NativeScript-AppSync-SDK-Version": packageJson.dependencies["nativescript-app-sync-cli"]
       }
     }).then((response: HttpResponse) => {
       callback(null, {

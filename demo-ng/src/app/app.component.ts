@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { CodePush, InstallMode, SyncStatus } from "nativescript-code-push";
+import { AppSync, InstallMode, SyncStatus } from "nativescript-app-sync";
 import * as application from "tns-core-modules/application";
 import { isIOS } from "tns-core-modules/platform";
 
@@ -9,23 +9,24 @@ import { isIOS } from "tns-core-modules/platform";
     templateUrl: "./app.component.html"
 })
 export class AppComponent {
-    private static CODEPUSH_IOS_STAGING_KEY = "HnJO7RAlCf3KcEcJ71I2nlRbMKxT4ksvOXqog";
-    private static CODEPUSH_IOS_PRODUCTION_KEY = "oCG3BNlt4r9YQrREMiXMT6vBpWIt4ksvOXqog";
 
-    private static CODEPUSH_ANDROID_STAGING_KEY = "mwrmt9OadOm6YRQrHp25GfyUX6OW4ksvOXqog";
-    private static CODEPUSH_ANDROID_PRODUCTION_KEY = "Qf12yqIIbNoKhL3JLNSHwtP0Bm994ksvOXqog";
+    private static APPSYNC_IOS_STAGING_KEY = "XongXpPmtsKt7WFmnKmHOK1b9M7H4ksvOXqog";
+    private static APPSYNC_IOS_PRODUCTION_KEY = "4KnhNcAwzwPR3rePHtf9guBsUF5W4ksvOXqog";
+
+    private static APPSYNC_ANDROID_STAGING_KEY = "4XoWtNu9usFBjrZv7CUtL8RNdbX44ksvOXqog";
+    private static APPSYNC_ANDROID_PRODUCTION_KEY = "jjQhiRNQO1zj2i2flmkIlXtbnB7q4ksvOXqog";
 
     constructor() {
         // Check for updates when the app is loaded or resumed
         application.on(application.resumeEvent, () => {
-            this.syncWithCodePushServer();
+            this.syncWithAppSyncServer();
         });
     }
 
-    private syncWithCodePushServer(): void {
-        console.log("Querying CodePush..");
-        CodePush.sync({
-            deploymentKey: isIOS ? AppComponent.CODEPUSH_IOS_STAGING_KEY : AppComponent.CODEPUSH_ANDROID_STAGING_KEY,
+    private syncWithAppSyncServer(): void {
+        console.log("Querying AppSync..");
+        AppSync.sync({
+            deploymentKey: isIOS ? AppComponent.APPSYNC_IOS_STAGING_KEY : AppComponent.APPSYNC_ANDROID_STAGING_KEY,
             installMode: InstallMode.ON_NEXT_RESTART, // default InstallMode.ON_NEXT_RESTART
             mandatoryInstallMode: isIOS ? InstallMode.ON_NEXT_RESUME : InstallMode.IMMEDIATE, // default InstallMode.ON_NEXT_RESUME
             updateDialog: { // only used for InstallMode.IMMEDIATE
@@ -34,13 +35,13 @@ export class AppComponent {
                 mandatoryUpdateMessage: "Mandatory update msg",
                 optionalIgnoreButtonLabel: "Later",
                 mandatoryContinueButtonLabel: isIOS ? "Exit now" : "Restart now",
-                appendReleaseDescription: true // appends the description you (optionally) provided when releasing a new version to CodePush
+                appendReleaseDescription: true // appends the description you (optionally) provided when releasing a new version to AppSync
             }
         }, (syncStatus: SyncStatus): void => {
             if (syncStatus === SyncStatus.UP_TO_DATE) {
-                console.log("CodePush: up to date");
+                console.log("AppSync: up to date");
             } else if (syncStatus === SyncStatus.UPDATE_INSTALLED) {
-                console.log("CodePush: update installed");
+                console.log("AppSync: update installed");
             }
         });
     }
