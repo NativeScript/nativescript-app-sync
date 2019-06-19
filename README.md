@@ -5,8 +5,8 @@
 [![Downloads][downloads-image]][npm-url]
 [![Twitter Follow][twitter-image]][twitter-url]
 
-[build-status]:https://travis-ci.org/EddyVerbruggen/nativescript-code-push.svg?branch=master
-[build-url]:https://travis-ci.org/EddyVerbruggen/nativescript-code-push
+[build-status]:https://travis-ci.org/EddyVerbruggen/nativescript-app-sync.svg?branch=master
+[build-url]:https://travis-ci.org/EddyVerbruggen/nativescript-app-sync
 [npm-image]:http://img.shields.io/npm/v/nativescript-app-sync.svg
 [npm-url]:https://npmjs.org/package/nativescript-app-sync
 [downloads-image]:http://img.shields.io/npm/dm/nativescript-app-sync.svg
