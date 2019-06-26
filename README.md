@@ -120,7 +120,7 @@ nativescript-app-sync app ls
 tns plugin add nativescript-app-sync
 ```
 
-> ⚠️ If you're restricting access to the internet from within your app, make sure you whitelist our AppSync server (`https://nativescript-codepush-server.herokuapp.com`) and File server (`https://s3.eu-west-1.amazonaws.com`).
+> ⚠️ If you're restricting access to the internet from within your app, make sure you whitelist our AppSync server (`https://appsync-server.nativescript.org`) and File server (`https://s3.eu-west-1.amazonaws.com`).
 
 ## Checking for updates
 With the AppSync plugin installed and configured, the only thing left is to add the necessary code to your app to control when it checks for updates.

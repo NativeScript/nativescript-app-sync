@@ -102,7 +102,7 @@ export class AppSync {
     AppSync.syncInProgress = true;
 
     // by default, use our Cloud server
-    options.serverUrl = options.serverUrl || "https://nativescript-codepush-server.herokuapp.com/";
+    options.serverUrl = options.serverUrl || "https://appsync-server.nativescript.org/";
 
     AppSync.cleanPackagesIfNeeded();
 
@@ -207,7 +207,7 @@ export class AppSync {
   static checkForUpdate(deploymentKey: string, serverUrl?: string): Promise<IRemotePackage | undefined> {
     return new Promise((resolve, reject) => {
       // by default, use our Cloud server
-      serverUrl = serverUrl || "https://nativescript-codepush-server.herokuapp.com/";
+      serverUrl = serverUrl || "https://appsync-server.nativescript.org/";
 
       const config: Configuration = {
         serverUrl,

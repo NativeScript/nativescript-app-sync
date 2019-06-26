@@ -331,7 +331,7 @@ interface SyncOptions extends InstallOptions {
     deploymentKey: string;
 
     /**
-     * Overrides the default server URL (https://nativescript-codepush-server.herokuapp.com/).
+     * Overrides the default server URL (https://appsync-server.nativescript.org/).
      */
     serverUrl?: string;
 }

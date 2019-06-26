@@ -43,7 +43,7 @@
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
     "nativescript-angular": "~7.2.0",
-    "nativescript-app-sync": "file:../publish/package/nativescript-app-sync-1.0.0.tgz",
+    "nativescript-app-sync": "file:../publish/package/nativescript-app-sync-1.0.1.tgz",
     "nativescript-theme-core": "~1.0.4",
     "reflect-metadata": "~0.1.12",
     "rxjs": "~6.3.0",
