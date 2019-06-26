@@ -15,7 +15,7 @@
 
 A live-update service for your NativeScript apps!
 
-> 📣 UPDATE June 18 2019: we've renamed this service from *CodePush* to *AppSync* to make it more clear we're not actually depending on [Microsoft CodePush](https://github.com/microsoft/code-push) anymore. We do owe them a lot of thanks because this solution builts upon their work. ❤️
+> 📣 **NOTE:** NativeScript AppSync is currently in beta and is *not supported* by the core NativeScript team. AppSync is based on [Microsoft CodePush](https://github.com/microsoft/code-push) and we owe them thanks because this solution builds upon their work. ❤️
 
 <details>
  <summary>Optional reading: what this is, and how it works</summary>
