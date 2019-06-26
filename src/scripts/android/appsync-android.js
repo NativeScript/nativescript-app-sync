@@ -1,5 +1,6 @@
 const fs = require('fs'),
-    path = require('path');
+  path = require('path'),
+  prepareHooksHelper = require("../prepare-hooks-helper");
 
 // patch NativeScriptApplication.java so it calls TNSAppSync (which is included in the bundled .aar file)
 function patchNativeScriptApplication(androidProjectFolder) {
@@ -13,18 +14,18 @@ function patchNativeScriptApplication(androidProjectFolder) {
     // patch NativeScriptApplication so TNSAppSync.activatePackage it's only called once in the app lifecycle
     const tnsAppFile = path.join(nsPackage, "NativeScriptApplication.java");
     replaceInFile(
-        tnsAppFile,
-        'super.onCreate();',
-        // adding a space so we don't do this more than once
-        'super.onCreate() ;\n\t\t\t\tTNSAppSync.activatePackage(this);');
+      tnsAppFile,
+      'super.onCreate();',
+      // adding a space so we don't do this more than once
+      'super.onCreate() ;\n\t\t\t\tTNSAppSync.activatePackage(this);');
 
-  } catch(e) {
+  } catch (e) {
     console.log("AppSync Android hook error: " + e);
   }
 }
 
 function replaceInFile(someFile, what, by) {
-  fs.readFile(someFile, 'utf8', function (err,data) {
+  fs.readFile(someFile, 'utf8', function (err, data) {
     if (err) {
       return console.log(err);
     }
@@ -36,11 +37,11 @@ function replaceInFile(someFile, what, by) {
   });
 }
 
-module.exports = function (logger, platformsData, projectData, hookArgs) {
-  const androidProjectFolder = path.join(projectData.platformsDir, "android");
+module.exports = function ($injector, hookArgs) {
+  const platform = prepareHooksHelper.getPlatformFromPrepareHookArgs(hookArgs);
 
-  return new Promise(function (resolve, reject) {
+  if (platform === 'android') {
+    const androidProjectFolder = prepareHooksHelper.getNativeProjectDir($injector, platform, hookArgs);
     patchNativeScriptApplication(androidProjectFolder);
-    resolve();
-  });
+  }
 };

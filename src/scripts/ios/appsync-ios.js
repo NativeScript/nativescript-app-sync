@@ -1,5 +1,6 @@
 const fs = require('fs'),
-    path = require('path');
+  path = require('path'),
+  prepareHooksHelper = require("../prepare-hooks-helper");
 
 // inject some code into main.m
 function patchUIApplicationMain(iosProjectFolder) {
@@ -17,20 +18,20 @@ function patchUIApplicationMain(iosProjectFolder) {
     if (tnsAppSyncFileDestContents.indexOf("TNSAppSync") === -1) {
       // let's first inject a header we need
       replaceInFile(
-          appSyncFileDest,
-          '#include <NativeScript/NativeScript.h>',
-          '#include <NativeScript/NativeScript.h>\n#include <AppSync/TNSAppSync.h>'
+        appSyncFileDest,
+        '#include <NativeScript/NativeScript.h>',
+        '#include <NativeScript/NativeScript.h>\n#include <AppSync/TNSAppSync.h>'
       );
 
       // now inject the function call that determines the correct application path (either default or appsync'ed)
       replaceInFile(
-          appSyncFileDest,
-          'applicationPath = [NSBundle mainBundle].bundlePath;',
-          'applicationPath = [TNSAppSync applicationPathWithDefault:[NSBundle mainBundle].bundlePath];'
+        appSyncFileDest,
+        'applicationPath = [NSBundle mainBundle].bundlePath;',
+        'applicationPath = [TNSAppSync applicationPathWithDefault:[NSBundle mainBundle].bundlePath];'
       );
     }
 
-  } catch(e) {
+  } catch (e) {
     console.log("AppSync iOS hook error: " + e);
   }
 }
@@ -41,11 +42,11 @@ function replaceInFile(theFile, what, by) {
   fs.writeFileSync(theFile, result, 'utf8');
 }
 
-module.exports = function (logger, platformsData, projectData, hookArgs) {
-  const iosProjectFolder = path.join(projectData.platformsDir, "ios");
+module.exports = function ($injector, hookArgs) {
+  const platform = prepareHooksHelper.getPlatformFromPrepareHookArgs(hookArgs);
 
-  return new Promise(function (resolve, reject) {
+  if (platform === 'ios') {
+    const iosProjectFolder = prepareHooksHelper.getNativeProjectDir($injector, platform, hookArgs);
     patchUIApplicationMain(iosProjectFolder);
-    resolve();
-  });
+  }
 };
