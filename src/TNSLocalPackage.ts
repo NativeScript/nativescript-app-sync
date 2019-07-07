@@ -84,7 +84,7 @@ export class TNSLocalPackage implements ILocalPackage {
       let buildTime: string;
       // Note that this 'if' hardly justifies subclassing so we're not
       if (isIOS) {
-        const plist = utils.ios.getter(NSBundle, NSBundle.mainBundle).pathForResourceOfType(null, "plist");
+        const plist = NSBundle.mainBundle.pathForResourceOfType(null, "plist");
         const fileDate = new fsa.FileSystemAccess().getLastModified(plist);
         buildTime = "" + fileDate.getTime();
       } else {
