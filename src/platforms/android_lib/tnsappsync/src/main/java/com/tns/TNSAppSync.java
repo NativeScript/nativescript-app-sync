@@ -44,19 +44,18 @@ public class TNSAppSync {
             }
         }
 
-        // move /app to /app_backup
-        final File appFolder = new File(context.getFilesDir().getPath() + "/app");
+        // copy /app to /app_backup (not renaming the folder, because we want to retain anything the app saved to the app folder at runtime)
+        // (example: if your app saves a file locally to /stuff/something.txt, it ends up as /data/user/0/org.nativescript.plugindemo.AppSync/files/stuff/something.txt)
+        try {
+            copyDirectoryContents(context.getFilesDir().getPath() + "/app", context.getFilesDir().getPath() + "/app_backup");
 
-        if (appFolder.renameTo(appBackupFolder)) {
-            // move pending to /app
-            if (pendingPackage.renameTo(appFolder)) {
-                // as long as the app wasn't restarted after an AppSync update, this key would exist to control JS behavior
-                removePendingHash(context);
-            } else {
-                // next to impossible, but just to be sure:
-                System.out.println("--- rename package to app failed");
-                appBackupFolder.renameTo(appFolder);
-            }
+            copyDirectoryContents(pendingPackagePath, context.getFilesDir().getPath() + "/app");
+
+            // as long as the app wasn't restarted after an AppSync update, this key would exist to control JS behavior
+            removePendingHash(context);
+        } catch (Exception e) {
+            System.out.println("--- installing app update failed: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

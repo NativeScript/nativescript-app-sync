@@ -1,10 +1,17 @@
 import { AppSync, InstallMode, SyncStatus } from "nativescript-app-sync";
 import * as application from "tns-core-modules/application";
+import * as appSettings from "tns-core-modules/application-settings";
+import { knownFolders } from "tns-core-modules/file-system" ;
 import { Observable } from "tns-core-modules/data/observable";
 import { isIOS } from "tns-core-modules/platform";
 
+const documents = knownFolders.documents();
+const txtFile = documents.getFile("/app/something.txt");
+
 export class HelloWorldModel extends Observable {
   private appSync: AppSync;
+
+  private static APPSETTINGS_KEY = "appsettings_key";
 
   private static APPSYNC_IOS_STAGING_KEY = "QA5daorV624ZP3p0FbFkngdZasME4ksvOXqog";
   private static APPSYNC_IOS_PRODUCTION_KEY = "rOw06mG4jrWfU8wkoKY7WHM2LhVa4ksvOXqog";
@@ -22,6 +29,42 @@ export class HelloWorldModel extends Observable {
     application.on(application.resumeEvent, () => {
       this.syncWithAppSyncServer();
     });
+  }
+
+  public setAppSettings() {
+    const d = new Date();
+    appSettings.setString(HelloWorldModel.APPSETTINGS_KEY, "AppSettings value set at " + d);
+    this.set("message", "Written date to AppSettings: " + d);
+  }
+
+  public getAppSettings() {
+    this.set("message", appSettings.getString(HelloWorldModel.APPSETTINGS_KEY));
+  }
+
+  public setFileSystem() {
+    const d = new Date();
+    txtFile.writeText("FileSystem value set at " + d)
+        .then(() => {
+          const value = "Written date to " + txtFile.path + ": " + d;
+          this.set("message", value);
+          console.log(value);
+        })
+        .catch(err => {
+          this.set("message", "Error writing to " + txtFile.path + ": " + err);
+          console.log("Error writing to " + txtFile.path + ": " + err);
+        });
+  }
+
+  public getFileSystem() {
+    txtFile.readText()
+        .then(content => {
+          this.set("message", "Got from " + txtFile.path + ": " + content);
+          console.log("Written to " + txtFile.path + ": " + content);
+        })
+        .catch(err => {
+          this.set("message", "Error reading from " + txtFile.path + ": " + err);
+          console.log("Error reading from " + txtFile.path + ": " + err);
+        });
   }
 
   private syncWithAppSyncServer(): void {
