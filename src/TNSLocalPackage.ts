@@ -29,7 +29,7 @@ export class TNSLocalPackage implements ILocalPackage {
   failedInstall: boolean;
   serverUrl: string;
 
-  install(installSuccess: SuccessCallback<InstallMode>, errorCallback?: ErrorCallback, installOptions?: InstallOptions): void {
+  install(installSuccess: Function, errorCallback?: ErrorCallback, installOptions?: InstallOptions): void {
     let appFolderPath = fs.knownFolders.documents().path + "/app";
     let unzipFolderPath = fs.knownFolders.documents().path + "/AppSync-Unzipped/" + this.packageHash;
     let appSyncFolder = fs.knownFolders.documents().path + "/AppSync";

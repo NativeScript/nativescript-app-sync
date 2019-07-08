@@ -81,11 +81,11 @@ export class HelloWorldModel extends Observable {
         mandatoryContinueButtonLabel: isIOS ? "Exit now" : "Restart now",
         appendReleaseDescription: true // appends the description you (optionally) provided when releasing a new version to AppSync
       }
-    }, (syncStatus: SyncStatus): void => {
+    }, (syncStatus: SyncStatus, updateLabel?: string): void => {
       if (syncStatus === SyncStatus.UP_TO_DATE) {
-        this.set("message", "AppSync: up to date");
+        this.set("message", `AppSync: up to date: ${updateLabel}`);
       } else if (syncStatus === SyncStatus.UPDATE_INSTALLED) {
-        this.set("message", "AppSync: update installed");
+        this.set("message", `AppSync: update installed: ${updateLabel}`);
       }
     });
   }

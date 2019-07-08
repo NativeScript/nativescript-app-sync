@@ -162,12 +162,12 @@ AppSync.sync({
       mandatoryContinueButtonLabel: isIOS ? "Exit now" : "Restart now", // On Android we can kill and restart the app, but on iOS that's not possible so the user has to manually restart it. That's why we provide a different label in this example.
       appendReleaseDescription: true // appends the description you (optionally) provided when releasing a new version to AppSync
     }
-  }, (syncStatus: SyncStatus): void => {
+  }, (syncStatus: SyncStatus, updateLabel?: string): void => {
     console.log("AppSync syncStatus: " + syncStatus);
     if (syncStatus === SyncStatus.UP_TO_DATE) {
-      console.log("AppSync: no pending updates; you're running the latest version!");
+      console.log(`AppSync: no pending updates; you're running the latest version, which is ${updateLabel}`);
     } else if (syncStatus === SyncStatus.UPDATE_INSTALLED) {
-      console.log("AppSync: update installed - it will be activated upon next cold boot");
+      console.log(`AppSync: update installed (${updateLabel}) - it will be activated upon next cold boot`);
     }
 });
 ```
@@ -193,11 +193,11 @@ AppSync.sync({
       mandatoryContinueButtonLabel: platform.isIOS ? "Exit now" : "Restart now",
       appendReleaseDescription: true // appends the description you (optionally) provided when releasing a new version to AppSync
     }
-}, function (syncStatus) {
+}, function (syncStatus, updateLabel) {
     if (syncStatus === SyncStatus.UP_TO_DATE) {
-      console.log("AppSync: no pending updates; you're running the latest version!");
+      console.log("AppSync: no pending updates; you're running the latest version, which is: " + updateLabel);
     } else if (syncStatus === SyncStatus.UPDATE_INSTALLED) {
-      console.log("AppSync: update installed - it will be activated upon next cold boot");
+      console.log("AppSync: update (" + updateLabel + ") installed - it will be activated upon next cold boot");
     }
 });
 ```

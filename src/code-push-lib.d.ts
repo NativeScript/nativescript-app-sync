@@ -126,7 +126,7 @@ interface NativeUpdateNotification {
 }
 
 interface Callback<T> { (error: Error, parameter: T): void; }
-interface SuccessCallback<T> { (result?: T): void; }
+interface SuccessCallback<T> { (result: T, updateLabel?: string): void; }
 interface ErrorCallback { (error?: Error): void; }
 
 interface Configuration {

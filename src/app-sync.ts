@@ -144,7 +144,7 @@ export class AppSync {
               this.killApp(false);
             };
 
-            syncCallback && syncCallback(SyncStatus.UPDATE_INSTALLED);
+            syncCallback && syncCallback(SyncStatus.UPDATE_INSTALLED, remotePackage.label);
 
             const installMode = options.installMode || InstallMode.ON_NEXT_RESTART;
             const mandatoryInstallMode = options.mandatoryInstallMode || InstallMode.ON_NEXT_RESUME;
@@ -182,11 +182,11 @@ export class AppSync {
           };
 
           const onDownloadSuccess = (localPackage: ILocalPackage) => {
-            syncCallback && syncCallback(SyncStatus.INSTALLING_UPDATE);
+            syncCallback && syncCallback(SyncStatus.INSTALLING_UPDATE, remotePackage.label);
             localPackage.install(onInstallSuccess, onError);
           };
 
-          syncCallback && syncCallback(SyncStatus.DOWNLOADING_PACKAGE);
+          syncCallback && syncCallback(SyncStatus.DOWNLOADING_PACKAGE, remotePackage.label);
 
           remotePackage.download(
               onDownloadSuccess,
