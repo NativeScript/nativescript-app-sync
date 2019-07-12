@@ -26,7 +26,7 @@ The AppSync plugin helps get product improvements in front of your end users ins
 
 In order to ensure that your end users always have a functioning version of your app, the AppSync plugin maintains a copy of the previous update, so that in the event that you accidentally push an update which includes a crash, it can automatically roll back. This way, you can rest assured that your newfound release agility won't result in users becoming blocked before you have a chance to roll back on the server. It's a win-win-win!
 
-<img src="https://github.com/EddyVerbruggen/nativescript-app-sync/raw/master/media/NativeScript%20AppSync%20landscape%20v2.png" width="380px">
+<img src="https://github.com/EddyVerbruggen/nativescript-app-sync/raw/master/media/NativeScript%20AppSync%20landscape%20v2.png" width="570px" height="508px">
 
 _Architectural overview of the solution - you don't need to worry about all of this_
 
