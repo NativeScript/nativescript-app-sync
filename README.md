@@ -26,7 +26,7 @@ The AppSync plugin helps get product improvements in front of your end users ins
 
 In order to ensure that your end users always have a functioning version of your app, the AppSync plugin maintains a copy of the previous update, so that in the event that you accidentally push an update which includes a crash, it can automatically roll back. This way, you can rest assured that your newfound release agility won't result in users becoming blocked before you have a chance to roll back on the server. It's a win-win-win!
 
-<img src="https://github.com/EddyVerbruggen/nativescript-app-sync/raw/master/media/NativeScript%20AppSync%20landscape.png" width="570px" height="508px">
+<img src="https://github.com/EddyVerbruggen/nativescript-app-sync/raw/master/media/NativeScript%20AppSync%20landscape%20v2.png" width="380px">
 
 _Architectural overview of the solution - you don't need to worry about all of this_
 
@@ -246,7 +246,7 @@ The easiest way to do this is to use the `release` command in our AppSync CLI. I
 |deploymentName|d|"Staging"|Deploy to either "Staging" or "Production".
 |description|des|not set|Description of the changes made to the app with this release.
 |targetBinaryVersion|t|`App_Resources`|Semver expression that specifies the binary app version(s) this release is targeting (e.g. 1.1.0, ~1.2.3). The default is the exact version in `App_Resources/iOS/Info.plist` or `App_Resources/Android/AndroidManifest.xml`. 
-|mandatory|m|not set|This specifies whether or not the update should be considered "urgent" (e.g. it includes a critical security fix). This attribute is simply round tripped to the client, who can then decide if and how they would like to enforce it. If this flag is not set, the update is considered "not urgent" so you may choose to wait for the next cold boot of the app.
+|mandatory|m|not set|This specifies whether or not the update should be considered "urgent" (e.g. it includes a critical security fix). This attribute is simply round tripped to the client, who can then decide if and how they would like to enforce it. If this flag is not set, the update is considered "not urgent" so you may choose to wait for the next cold boot of the app. It does not mean users get to 'opt out' from an update; all AppSync updates will eventually be installed on the client.
 
 Have a few examples for both platforms:
 
