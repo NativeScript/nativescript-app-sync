@@ -1,6 +1,6 @@
 {
   "name": "nativescript-app-sync",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Use AppSync to hot deploy updates to your app.",
   "main": "app-sync",
   "typings": "index.d.ts",
@@ -40,7 +40,7 @@
     "test.ios": "npm run build && npm run tslint && npm run tslint.demo && cd ../demo && tns test ios",
     "development.setup": "npm run setup && npm link && cd ../demo && npm link nativescript-app-sync && cd ../src",
     "package": "cd ../publish && ./pack.sh",
-    "postinstall": "node postinstall-hooks.js && npm i -g nativescript-app-sync-cli",
+    "postinstall": "node postinstall-hooks.js",
     "preuninstall": "node preuninstall-hooks.js"
   },
   "repository": {
