@@ -25,7 +25,14 @@ public class TNSAppSync {
 
     // if AppSync/pending/app path exists, rename it to /app
     static void activatePackage(final Context context) {
-        final String pendingPackagePath = getCurrentPackagePath(context);
+        String pendingPackagePath = null;
+        try {
+            pendingPackagePath = getCurrentPackagePath(context);
+        } catch (Exception e) {
+            // This could be an IllegalStateException, fi. when the device is locked and the app is
+            // started by a BroadCastListener, so sharedpreferences can't be read.
+        }
+
         if (pendingPackagePath == null) {
             return;
         }

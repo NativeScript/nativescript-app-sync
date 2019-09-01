@@ -4,7 +4,7 @@ Using this wrapper to more easily copy some files around and (optionally) move s
 
 ### Building the framework
 - Clone this repo
-- Start Android Studio and pick "Open an existing Android Studio project" ➡️ `{this repo}/platforms/android_lib`
+- Start Android Studio and pick "Open an existing Android Studio project" ➡️ `{this repo}/src/platforms/android_lib`
 - Update the `/src/main` folder as needed
 - Open the Gradle toolwindow
 - Run tnsappsync > Tasks > build > build
