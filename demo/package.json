@@ -2,10 +2,10 @@
   "nativescript": {
     "id": "org.nativescript.plugindemo.AppSync",
     "tns-ios": {
-      "version": "6.0.1"
+      "version": "6.0.2"
     },
     "tns-android": {
-      "version": "6.0.0"
+      "version": "6.0.2"
     }
   },
   "scripts": {
@@ -31,10 +31,10 @@
     "ci.tslint": "npm i && tslint --config '../tslint.json' 'demoapp/**/*.ts' --exclude '**/node_modules/**' --exclude '**/typings/**'"
   },
   "dependencies": {
-    "nativescript-app-sync": "file:../publish/package/nativescript-app-sync-1.0.4.tgz",
+    "nativescript-app-sync": "file:../publish/package/nativescript-app-sync-1.0.5.tgz",
     "nativescript-theme-core": "~1.0.4",
     "nativescript-unit-test-runner": "0.7.0",
-    "tns-core-modules": "6.0.1"
+    "tns-core-modules": "~6.0.0"
   },
   "devDependencies": {
     "babel-traverse": "6.26.0",
@@ -47,7 +47,7 @@
     "karma-nativescript-launcher": "^0.4.0",
     "lazy": "1.0.11",
     "nativescript-dev-webpack": "1.0.1",
-    "tns-platform-declarations": "6.0.1",
+    "tns-platform-declarations": "~6.0.0",
     "tslint": "~5.4.3",
     "typescript": "3.4.5",
     "karma-webpack": "3.0.5"
