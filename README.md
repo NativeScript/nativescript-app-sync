@@ -527,7 +527,7 @@ nativescript-app-sync collaborator ls <appName>
 
 </details>
 
-### Using AppSync behind a proxy
+## Using AppSync behind a proxy
 <details>
   <summary>Click here to read all about Proxy Support</summary>
 By default, the `login` command will automatically look for a system-wide proxy, specified via an `HTTPS_PROXY` or `HTTP_PROXY` environment variable, and use that to connect to the server.
@@ -549,3 +549,6 @@ This allows you to continue using the CLI without needing to re-authenticate or 
 If at any time you want to start or stop using a proxy, simply logout, and then log back in with the newly desired settings.
 
 </details>
+
+## Troubleshooting
+- Got build errors related to the __nativescript-zip__ plugin? Please check out [the solution in this issue](https://github.com/EddyVerbruggen/nativescript-app-sync/issues/34#issuecomment-526860302).
