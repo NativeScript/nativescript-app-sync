@@ -29,6 +29,8 @@ export class HelloWorldModel extends Observable {
     application.on(application.resumeEvent, () => {
       this.syncWithAppSyncServer();
     });
+
+    this.set("message", "HMR enabled: " +  (typeof (<any>global).hmrRefresh === "function"));
   }
 
   public setAppSettings() {
@@ -70,6 +72,7 @@ export class HelloWorldModel extends Observable {
   private syncWithAppSyncServer(): void {
     this.set("message", "Querying AppSync..");
     AppSync.sync({
+      enabledWhenUsingHmr: false,
       deploymentKey: isIOS ? HelloWorldModel.APPSYNC_IOS_STAGING_KEY : HelloWorldModel.APPSYNC_ANDROID_STAGING_KEY,
       installMode: InstallMode.ON_NEXT_RESTART, // default InstallMode.ON_NEXT_RESTART
       mandatoryInstallMode: isIOS ? InstallMode.ON_NEXT_RESUME : InstallMode.IMMEDIATE, // default InstallMode.ON_NEXT_RESUME
@@ -86,6 +89,8 @@ export class HelloWorldModel extends Observable {
         this.set("message", `AppSync: up to date: ${updateLabel}`);
       } else if (syncStatus === SyncStatus.UPDATE_INSTALLED) {
         this.set("message", `AppSync: update installed: ${updateLabel}`);
+      } else {
+        this.set("message", `AppSync: status changed to: ${syncStatus}`);
       }
     });
   }

@@ -151,6 +151,7 @@ import { AppSync, InstallMode, SyncStatus } from "nativescript-app-sync";
 import { isIOS } from "tns-core-modules/platform";
 
 AppSync.sync({
+    enabledWhenUsingHmr: false, // this is optional and by default false so AppSync and HMR don't fight over app updates
     deploymentKey: isIOS ? "your-ios-deployment-key" : "your-android-deployment-key",
     installMode: InstallMode.ON_NEXT_RESTART, // this is the default install mode; the app updates upon the next cold boot (unless the --mandatory flag was specified while pushing the update) 
     mandatoryInstallMode: isIOS ? InstallMode.ON_NEXT_RESUME : InstallMode.IMMEDIATE, // the default is InstallMode.ON_NEXT_RESUME which doesn't bother the user as long as the app is in the foreground. InstallMode.IMMEDIATE shows an installation prompt. Don't use that for iOS AppStore distributions because Apple doesn't want you to, but if you have an Enterprise-distributed app, go right ahead!
@@ -182,6 +183,7 @@ var SyncStatus = require("nativescript-app-sync").SyncStatus;
 var platform = require("tns-core-modules/platform");
 
 AppSync.sync({
+    enabledWhenUsingHmr: false, // this is optional and by default false so AppSync and HMR don't fight over app updates
     deploymentKey: platform.isIOS ? "your-ios-deployment-key" : "your-android-deployment-key",
     installMode: InstallMode.ON_NEXT_RESTART,
     mandatoryInstallMode: platform.isIOS ? InstallMode.ON_NEXT_RESUME : InstallMode.IMMEDIATE,

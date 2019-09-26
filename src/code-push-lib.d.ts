@@ -334,6 +334,12 @@ interface SyncOptions extends InstallOptions {
      * Overrides the default server URL (https://appsync-server.nativescript.org/).
      */
     serverUrl?: string;
+
+    /**
+     * By default we ignore AppSync updates when running with HMR.
+     * But if you feel adventurous you can override that behaviour by setting this to true.
+     */
+    enabledWhenUsingHmr?: boolean;
 }
 
 /**

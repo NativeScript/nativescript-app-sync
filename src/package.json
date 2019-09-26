@@ -1,6 +1,6 @@
 {
   "name": "nativescript-app-sync",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Use AppSync to hot deploy updates to your app.",
   "main": "app-sync",
   "typings": "index.d.ts",

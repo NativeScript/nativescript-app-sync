@@ -2,9 +2,9 @@
 
 import * as appSettings from "application-settings";
 import * as AppVersion from "nativescript-appversion";
+import * as application from "tns-core-modules/application";
 import { device } from "tns-core-modules/platform";
 import { confirm } from "tns-core-modules/ui/dialogs";
-import * as application from "tns-core-modules/application";
 import { TNSAcquisitionManager } from "./TNSAcquisitionManager";
 import { TNSLocalPackage } from "./TNSLocalPackage";
 import { TNSRemotePackage } from "./TNSRemotePackage";
@@ -51,6 +51,11 @@ export enum SyncStatus {
   ERROR = <any>"ERROR",
 
   /**
+   * Returned if HMR is enabled and not overridden by the user.
+   */
+  SKIPPING_BECAUSE_HMR_ENABLED = <any>"SKIPPING_BECAUSE_HMR_ENABLED",
+
+  /**
    * There is an ongoing sync in progress, so this attempt to sync has been aborted.
    */
   IN_PROGRESS = <any>"IN_PROGRESS",
@@ -95,10 +100,12 @@ export class AppSync {
       throw new Error("Missing deploymentKey, pass it as part of the first parameter of the 'sync' function: { deploymentKey: 'your-key' }");
     }
 
-    if (AppSync.syncInProgress) {
-      syncCallback && syncCallback(SyncStatus.IN_PROGRESS);
+    // skip AppSync when HMR is detected, unless it's explicitly allowed
+    if (typeof (<any>global).hmrRefresh === "function" && !options.enabledWhenUsingHmr) {
+      syncCallback && syncCallback(SyncStatus.SKIPPING_BECAUSE_HMR_ENABLED);
       return;
     }
+
     AppSync.syncInProgress = true;
 
     // by default, use our Cloud server
