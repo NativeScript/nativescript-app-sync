@@ -42,6 +42,8 @@ export class AppComponent {
                 console.log("AppSync: up to date");
             } else if (syncStatus === SyncStatus.UPDATE_INSTALLED) {
                 console.log("AppSync: update installed");
+            } else {
+                console.log("AppSync: sync status: " + syncStatus);
             }
         });
     }

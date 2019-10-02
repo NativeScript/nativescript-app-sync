@@ -1,6 +1,6 @@
 {
   "name": "nativescript-app-sync",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Use AppSync to hot deploy updates to your app.",
   "main": "app-sync",
   "typings": "index.d.ts",
@@ -68,7 +68,7 @@
   "homepage": "https://github.com/eddyverbruggen/nativescript-app-sync",
   "readmeFilename": "README.md",
   "dependencies": {
-    "nativescript-app-sync-cli": "~1.0.1",
+    "nativescript-app-sync-sdk": "~1.0.1",
     "nativescript-appversion": "~1.4.2",
     "nativescript-hook": "~0.2.5",
     "nativescript-zip": "git+https://github.com/EddyVerbruggen/nativescript-zip.git#330fa2d"
