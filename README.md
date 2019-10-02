@@ -33,7 +33,7 @@ _Architectural overview of the solution - you don't need to worry about all of t
 </details>
 
 ### What can (and will) be AppSync'ed?
-- Anything inside your `/app` folder (but not the `App_Resources` folder.
+- Anything inside your `/app` folder (but not the `App_Resources` folder).
 - Anything inside your `/node_modules` folder.
 
 > 💁‍♂️ Note that we don't actually use those folders, but the `app` folder in `platforms/ios/<appname>/app` and `platforms/android/app/src/main/assets/app`, the benefit of which is we don't "care" if you use Webpack or Uglify or whatever tools you use to minify or scramble your app's assets.
