@@ -1,5 +1,4 @@
-import { File } from "tns-core-modules/file-system";
-import { getFile } from "tns-core-modules/http";
+import { File, Http } from "@nativescript/core";
 import { TNSAcquisitionManager } from "./TNSAcquisitionManager";
 import { TNSLocalPackage } from "./TNSLocalPackage";
 
@@ -36,15 +35,15 @@ export class TNSRemotePackage implements IRemotePackage {
     };
 
     // download, with a silly but effective retry mechanism
-    getFile(this.downloadUrl)
+    Http.getFile(this.downloadUrl)
         .then(onDownloadSuccess)
         .catch(() => {
           setTimeout(() => {
-            getFile(this.downloadUrl)
+            Http.getFile(this.downloadUrl)
                 .then(onDownloadSuccess)
                 .catch(() => {
                   setTimeout(() => {
-                    getFile(this.downloadUrl)
+                    Http.getFile(this.downloadUrl)
                         .then(onDownloadSuccess)
                         .catch((e: any) => downloadError(new Error("Could not download remote package. " + e)));
                   }, 3000);

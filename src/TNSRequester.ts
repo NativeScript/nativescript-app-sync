@@ -1,4 +1,4 @@
-import { HttpResponse, request } from "tns-core-modules/http";
+import { HttpResponse, Http as nsHttp } from "@nativescript/core";
 import Requester = Http.Requester;
 
 const packageJson = require("./package.json");
@@ -16,7 +16,7 @@ export class TNSRequester implements Requester {
       requestBody = JSON.stringify(requestBody);
     }
 
-    request({
+    nsHttp.request({
       method: TNSRequester.getHttpMethodName(verb),
       url,
       content: requestBody,

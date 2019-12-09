@@ -1,6 +1,6 @@
 {
   "name": "nativescript-app-sync",
-  "version": "1.0.7",
+  "version": "2.0.0",
   "description": "Use AppSync to hot deploy updates to your app.",
   "main": "app-sync",
   "typings": "index.d.ts",
@@ -69,15 +69,15 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "nativescript-app-sync-sdk": "~1.0.1",
-    "nativescript-appversion": "~1.4.2",
+    "nativescript-appversion": "~1.4.4",
     "nativescript-hook": "~0.2.5",
-    "nativescript-zip": "git+https://github.com/EddyVerbruggen/nativescript-zip.git#330fa2d"
+    "nativescript-zip": "~4.0.2"
   },
   "devDependencies": {
     "rimraf": "~2.6.3",
-    "tns-core-modules": "~5.4.2",
-    "tns-platform-declarations": "~5.4.2",
+    "tns-core-modules": "~6.2.0",
+    "tns-platform-declarations": "~6.2.0",
     "tslint": "~5.12.0",
-    "typescript": "~3.3.0"
+    "typescript": "~3.5.3"
   }
 }

@@ -1,10 +1,8 @@
 /// <reference path="./code-push-lib.d.ts"/>
 
-import * as appSettings from "application-settings";
 import * as AppVersion from "nativescript-appversion";
-import * as application from "tns-core-modules/application";
-import { device } from "tns-core-modules/platform";
-import { confirm } from "tns-core-modules/ui/dialogs";
+import { Application, ApplicationSettings, Device } from "@nativescript/core";
+import { confirm } from "@nativescript/core/ui/dialogs";
 import { TNSAcquisitionManager } from "./TNSAcquisitionManager";
 import { TNSLocalPackage } from "./TNSLocalPackage";
 import { TNSRemotePackage } from "./TNSRemotePackage";
@@ -143,11 +141,11 @@ export class AppSync {
           };
 
           const onInstallSuccess = () => {
-            appSettings.setString(AppSync.PENDING_HASH_KEY, remotePackage.packageHash);
-            appSettings.setString(AppSync.CURRENT_HASH_KEY, remotePackage.packageHash);
+            ApplicationSettings.setString(AppSync.PENDING_HASH_KEY, remotePackage.packageHash);
+            ApplicationSettings.setString(AppSync.CURRENT_HASH_KEY, remotePackage.packageHash);
 
             const onSuspend = () => {
-              application.off("suspend", onSuspend);
+              Application.off("suspend", onSuspend);
               this.killApp(false);
             };
 
@@ -163,7 +161,7 @@ export class AppSync {
 
               case InstallMode.ON_NEXT_RESUME:
                 console.log("Update is installed and will be run when the app next resumes.");
-                application.on("suspend", onSuspend);
+                Application.on("suspend", onSuspend);
                 break;
 
               case InstallMode.IMMEDIATE:
@@ -179,7 +177,7 @@ export class AppSync {
                     setTimeout(() => this.killApp(true), 300);
                   } else {
                     // fall back to next suspend/resume instead
-                    application.on("suspend", onSuspend);
+                    Application.on("suspend", onSuspend);
                   }
                 });
                 break;
@@ -219,7 +217,7 @@ export class AppSync {
       const config: Configuration = {
         serverUrl,
         appVersion: AppVersion.getVersionNameSync(),
-        clientUniqueId: device.uuid,
+        clientUniqueId: Device.uuid,
         deploymentKey
       };
 
@@ -265,7 +263,7 @@ export class AppSync {
       resolve({
         appVersion: config.appVersion,
         deploymentKey: config.deploymentKey,
-        packageHash: appSettings.getString(AppSync.CURRENT_HASH_KEY),
+        packageHash: ApplicationSettings.getString(AppSync.CURRENT_HASH_KEY),
         isMandatory: false,
         failedInstall: false,
         description: undefined,
@@ -283,7 +281,7 @@ export class AppSync {
       new TNSAcquisitionManager(deploymentKey, serverUrl).reportStatusDeploy(null, "DeploymentSucceeded");
 
     } else if (!AppSync.hasPendingHash()) {
-      const currentPackageHash = appSettings.getString(AppSync.CURRENT_HASH_KEY, null);
+      const currentPackageHash = ApplicationSettings.getString(AppSync.CURRENT_HASH_KEY, null);
       if (currentPackageHash !== null && currentPackageHash !== AppSync.firstLaunchValue()) {
         // first run of an update from AppSync
         AppSync.markPackageAsFirstRun(currentPackageHash);
@@ -297,37 +295,37 @@ export class AppSync {
   }
 
   private static killApp(restartOnAndroid: boolean): void {
-    if (application.android) {
+    if (Application.android) {
       if (restartOnAndroid) {
         //noinspection JSUnresolvedFunction,JSUnresolvedVariable
-        const mStartActivity = new android.content.Intent(application.android.context, application.android.startActivity.getClass());
+        const mStartActivity = new android.content.Intent(Application.android.context, Application.android.startActivity.getClass());
         const mPendingIntentId = parseInt("" + (Math.random() * 100000), 10);
         //noinspection JSUnresolvedFunction,JSUnresolvedVariable
-        const mPendingIntent = android.app.PendingIntent.getActivity(application.android.context, mPendingIntentId, mStartActivity, android.app.PendingIntent.FLAG_CANCEL_CURRENT);
+        const mPendingIntent = android.app.PendingIntent.getActivity(Application.android.context, mPendingIntentId, mStartActivity, android.app.PendingIntent.FLAG_CANCEL_CURRENT);
         //noinspection JSUnresolvedFunction,JSUnresolvedVariable
-        const mgr = application.android.context.getSystemService(android.content.Context.ALARM_SERVICE);
+        const mgr = Application.android.context.getSystemService(android.content.Context.ALARM_SERVICE);
         //noinspection JSUnresolvedFunction,JSUnresolvedVariable
         mgr.set(android.app.AlarmManager.RTC, java.lang.System.currentTimeMillis() + 100, mPendingIntent);
         //noinspection JSUnresolvedFunction,JSUnresolvedVariable
       }
       android.os.Process.killProcess(android.os.Process.myPid());
-    } else if (application.ios) {
+    } else if (Application.ios) {
       exit(0);
     }
   }
 
   private static cleanPackagesIfNeeded(): void {
-    const shouldClean = appSettings.getBoolean(AppSync.CLEAN_KEY, false);
+    const shouldClean = ApplicationSettings.getBoolean(AppSync.CLEAN_KEY, false);
     if (!shouldClean) {
       return;
     }
-    appSettings.remove(AppSync.CLEAN_KEY);
-    appSettings.remove(AppSync.BINARY_FIRST_RUN_KEY);
+    ApplicationSettings.remove(AppSync.CLEAN_KEY);
+    ApplicationSettings.remove(AppSync.BINARY_FIRST_RUN_KEY);
     TNSLocalPackage.clean();
   }
 
   private static isBinaryFirstRun(): boolean {
-    const firstRunFlagSet = appSettings.getBoolean(AppSync.BINARY_FIRST_RUN_KEY, false);
+    const firstRunFlagSet = ApplicationSettings.getBoolean(AppSync.BINARY_FIRST_RUN_KEY, false);
     return !firstRunFlagSet;
   }
 
@@ -336,18 +334,18 @@ export class AppSync {
    * @returns {boolean}
    */
   private static hasPendingHash(): boolean {
-    return appSettings.hasKey(AppSync.PENDING_HASH_KEY);
+    return ApplicationSettings.hasKey(AppSync.PENDING_HASH_KEY);
   }
 
   private static markBinaryAsFirstRun(): void {
-    appSettings.setBoolean(AppSync.BINARY_FIRST_RUN_KEY, true);
+    ApplicationSettings.setBoolean(AppSync.BINARY_FIRST_RUN_KEY, true);
   }
 
   private static firstLaunchValue(): string {
-    return appSettings.getString(AppSync.UNCONFIRMED_INSTALL_KEY, null);
+    return ApplicationSettings.getString(AppSync.UNCONFIRMED_INSTALL_KEY, null);
   }
 
   private static markPackageAsFirstRun(pack: string): void {
-    appSettings.setString(AppSync.UNCONFIRMED_INSTALL_KEY, pack);
+    ApplicationSettings.setString(AppSync.UNCONFIRMED_INSTALL_KEY, pack);
   }
 }

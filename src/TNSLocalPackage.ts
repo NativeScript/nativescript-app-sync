@@ -1,9 +1,6 @@
 import { Zip } from "nativescript-zip";
-import * as appSettings from "tns-core-modules/application-settings";
-import * as fs from "tns-core-modules/file-system";
-import * as fsa from "tns-core-modules/file-system/file-system-access";
-import { isIOS } from "tns-core-modules/platform";
-import * as utils from "tns-core-modules/utils/utils";
+import { isIOS, ApplicationSettings, knownFolders, File, Folder, Utils } from "@nativescript/core";
+import { FileSystemAccess } from "@nativescript/core/file-system/file-system-access";
 import { AppSync } from "./app-sync";
 import { TNSAcquisitionManager } from "./TNSAcquisitionManager";
 
@@ -30,15 +27,15 @@ export class TNSLocalPackage implements ILocalPackage {
   serverUrl: string;
 
   install(installSuccess: Function, errorCallback?: ErrorCallback, installOptions?: InstallOptions): void {
-    let appFolderPath = fs.knownFolders.documents().path + "/app";
-    let unzipFolderPath = fs.knownFolders.documents().path + "/AppSync-Unzipped/" + this.packageHash;
-    let appSyncFolder = fs.knownFolders.documents().path + "/AppSync";
+    let appFolderPath = knownFolders.documents().path + "/app";
+    let unzipFolderPath = knownFolders.documents().path + "/AppSync-Unzipped/" + this.packageHash;
+    let appSyncFolder = knownFolders.documents().path + "/AppSync";
     // make sure the AppSync folder exists
-    fs.Folder.fromPath(appSyncFolder);
-    let newPackageFolderPath = fs.knownFolders.documents().path + "/AppSync/" + this.packageHash;
+    Folder.fromPath(appSyncFolder);
+    let newPackageFolderPath = knownFolders.documents().path + "/AppSync/" + this.packageHash;
     // in case of a rollback make 'newPackageFolderPath' could already exist, so check and remove
-    if (fs.Folder.exists(newPackageFolderPath)) {
-      fs.Folder.fromPath(newPackageFolderPath).removeSync();
+    if (Folder.exists(newPackageFolderPath)) {
+      Folder.fromPath(newPackageFolderPath).removeSync();
     }
 
     const onUnzipComplete = (success: boolean, error?: string) => {
@@ -48,10 +45,10 @@ export class TNSLocalPackage implements ILocalPackage {
         return;
       }
 
-      const previousHash = appSettings.getString(AppSync.CURRENT_HASH_KEY, null);
-      const isDiffPackage = fs.File.exists(unzipFolderPath + "/hotappsync.json");
+      const previousHash = ApplicationSettings.getString(AppSync.CURRENT_HASH_KEY, null);
+      const isDiffPackage = File.exists(unzipFolderPath + "/hotappsync.json");
       if (isDiffPackage) {
-        const copySourceFolder = previousHash === null ? appFolderPath : fs.knownFolders.documents().path + "/AppSync/" + previousHash;
+        const copySourceFolder = previousHash === null ? appFolderPath : knownFolders.documents().path + "/AppSync/" + previousHash;
         if (!TNSLocalPackage.copyFolder(copySourceFolder, newPackageFolderPath)) {
           errorCallback && errorCallback(new Error(`Failed to copy ${copySourceFolder} to ${newPackageFolderPath}`));
           return;
@@ -61,16 +58,16 @@ export class TNSLocalPackage implements ILocalPackage {
           return;
         }
       } else {
-        new fsa.FileSystemAccess().rename(unzipFolderPath, newPackageFolderPath, (error) => {
+        new FileSystemAccess().rename(unzipFolderPath, newPackageFolderPath, (error) => {
           errorCallback && errorCallback(new Error(error));
           return;
         });
       }
 
       if (!isIOS) {
-        let pendingFolderPath = fs.knownFolders.documents().path + "/AppSync/pending";
-        if (fs.Folder.exists(pendingFolderPath)) {
-          fs.Folder.fromPath(pendingFolderPath).removeSync();
+        let pendingFolderPath = knownFolders.documents().path + "/AppSync/pending";
+        if (Folder.exists(pendingFolderPath)) {
+          Folder.fromPath(pendingFolderPath).removeSync();
         }
         if (!TNSLocalPackage.copyFolder(newPackageFolderPath, pendingFolderPath)) {
           errorCallback && errorCallback(new Error(`Failed to copy ${newPackageFolderPath} to ${pendingFolderPath}`));
@@ -78,22 +75,22 @@ export class TNSLocalPackage implements ILocalPackage {
         }
       }
 
-      appSettings.setString(TNSLocalPackage.APPSYNC_CURRENT_APPVERSION, this.appVersion);
+      ApplicationSettings.setString(TNSLocalPackage.APPSYNC_CURRENT_APPVERSION, this.appVersion);
       TNSLocalPackage.saveCurrentPackage(this);
 
       let buildTime: string;
       // Note that this 'if' hardly justifies subclassing so we're not
       if (isIOS) {
         const plist = NSBundle.mainBundle.pathForResourceOfType(null, "plist");
-        const fileDate = new fsa.FileSystemAccess().getLastModified(plist);
+        const fileDate = new FileSystemAccess().getLastModified(plist);
         buildTime = "" + fileDate.getTime();
       } else {
-        const appSyncApkBuildTimeStringId = utils.ad.resources.getStringId(TNSLocalPackage.APPSYNC_APK_BUILD_TIME);
-        buildTime = utils.ad.getApplicationContext().getResources().getString(appSyncApkBuildTimeStringId);
+        const appSyncApkBuildTimeStringId = Utils.android.resources.getStringId(TNSLocalPackage.APPSYNC_APK_BUILD_TIME);
+        buildTime = Utils.android.getApplicationContext().getResources().getString(appSyncApkBuildTimeStringId);
       }
-      appSettings.setString(TNSLocalPackage.APPSYNC_CURRENT_APPBUILDTIME, buildTime);
+      ApplicationSettings.setString(TNSLocalPackage.APPSYNC_CURRENT_APPBUILDTIME, buildTime);
       //noinspection JSIgnoredPromiseFromCall (removal is async, don't really care if it fails)
-      fs.File.fromPath(this.localPath).remove();
+      File.fromPath(this.localPath).remove();
 
       installSuccess();
     };
@@ -121,7 +118,11 @@ export class TNSLocalPackage implements ILocalPackage {
           }
       );
     } else {
-      Zip.unzipWithProgress(archive, destination, progressCallback).then(
+      Zip.unzip({
+        archive,
+        directory: destination,
+        onProgress: progressCallback
+      }).then(
           () => {
             completionCallback(true);
           },
@@ -138,20 +139,20 @@ export class TNSLocalPackage implements ILocalPackage {
       return;
     }
 
-    appSettings.remove(TNSLocalPackage.APPSYNC_CURRENT_APPVERSION);
-    appSettings.remove(TNSLocalPackage.APPSYNC_CURRENT_APPBUILDTIME);
+    ApplicationSettings.remove(TNSLocalPackage.APPSYNC_CURRENT_APPVERSION);
+    ApplicationSettings.remove(TNSLocalPackage.APPSYNC_CURRENT_APPBUILDTIME);
 
-    const appSyncFolder = fs.Folder.fromPath(fs.knownFolders.documents().path + "/AppSync");
+    const appSyncFolder = Folder.fromPath(knownFolders.documents().path + "/AppSync");
     //noinspection JSIgnoredPromiseFromCall
     appSyncFolder.clear();
   }
 
   private static saveCurrentPackage(pack: IPackage): void {
-    appSettings.setString(TNSLocalPackage.APPSYNC_CURRENT_PACKAGE, JSON.stringify(pack));
+    ApplicationSettings.setString(TNSLocalPackage.APPSYNC_CURRENT_PACKAGE, JSON.stringify(pack));
   }
 
   static getCurrentPackage(): IPackage {
-    const packageStr: string = appSettings.getString(TNSLocalPackage.APPSYNC_CURRENT_PACKAGE, null);
+    const packageStr: string = ApplicationSettings.getString(TNSLocalPackage.APPSYNC_CURRENT_PACKAGE, null);
     return packageStr === null ? null : JSON.parse(packageStr);
   }
 
