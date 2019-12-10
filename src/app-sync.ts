@@ -7,6 +7,8 @@ import { TNSAcquisitionManager } from "./TNSAcquisitionManager";
 import { TNSLocalPackage } from "./TNSLocalPackage";
 import { TNSRemotePackage } from "./TNSRemotePackage";
 
+export { TNSLocalPackage } from './TNSLocalPackage';
+
 export enum InstallMode {
   /**
    * The update will be applied to the running application immediately. The application will be reloaded with the new content immediately.
