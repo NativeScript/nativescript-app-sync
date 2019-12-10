@@ -27,3 +27,4 @@ publish/src
 publish/package
 
 node_modules
+package-lock.json

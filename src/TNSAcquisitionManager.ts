@@ -1,6 +1,6 @@
 import * as AppVersion from "nativescript-appversion";
 import { AcquisitionManager as AppSyncSDK } from "nativescript-app-sync-sdk/script/acquisition-sdk";
-import { device } from "tns-core-modules/platform";
+import { Device } from "@nativescript/core";
 import { TNSRequester } from "./TNSRequester";
 
 export class TNSAcquisitionManager {
@@ -11,7 +11,7 @@ export class TNSAcquisitionManager {
     const config: Configuration = {
       serverUrl,
       appVersion: AppVersion.getVersionNameSync(),
-      clientUniqueId: device.uuid,
+      clientUniqueId: Device.uuid,
       deploymentKey
     };
     this.appSyncSDK = new AppSyncSDK(new TNSRequester(), config);
