@@ -31,7 +31,7 @@
     "ci.tslint": "npm i && tslint --config '../tslint.json' 'demoapp/**/*.ts' --exclude '**/node_modules/**' --exclude '**/typings/**'"
   },
   "dependencies": {
-    "nativescript-app-sync": "file:../publish/package/nativescript-app-sync-1.0.7.tgz",
+    "nativescript-app-sync": "file:../publish/package/nativescript-app-sync-2.0.0.tgz",
     "nativescript-theme-core": "~1.0.4",
     "nativescript-unit-test-runner": "0.7.0",
     "tns-core-modules": "~6.2.0"
