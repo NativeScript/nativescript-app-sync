@@ -1,6 +1,6 @@
 {
   "name": "nativescript-app-sync",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Use AppSync to hot deploy updates to your app.",
   "main": "app-sync",
   "typings": "index.d.ts",
@@ -11,7 +11,7 @@
     },
     "hooks": [
       {
-        "type": "before-prepare",
+        "type": "after-prepare",
         "script": "scripts/ios/appsync-ios.js",
         "inject": true
       },
@@ -70,7 +70,7 @@
   "dependencies": {
     "nativescript-app-sync-sdk": "~1.0.1",
     "nativescript-appversion": "~1.4.4",
-    "nativescript-hook": "~0.2.5",
+    "nativescript-hook": "git://github.com/NativeScript/nativescript-hook.git#feat/ns7",
     "nativescript-zip": "~4.0.2"
   },
   "devDependencies": {

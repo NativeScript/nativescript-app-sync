@@ -19,15 +19,15 @@ function patchUIApplicationMain(iosProjectFolder) {
       // let's first inject a header we need
       replaceInFile(
         appSyncFileDest,
-        '#include <NativeScript/NativeScript.h>',
-        '#include <NativeScript/NativeScript.h>\n#include <AppSync/TNSAppSync.h>'
+        '#import <NativeScript/NativeScript.h>',
+        '#import <NativeScript/NativeScript.h>\n#include <AppSync/TNSAppSync.h>'
       );
 
       // now inject the function call that determines the correct application path (either default or appsync'ed)
       replaceInFile(
         appSyncFileDest,
-        'applicationPath = [NSBundle mainBundle].bundlePath;',
-        'applicationPath = [TNSAppSync applicationPathWithDefault:[NSBundle mainBundle].bundlePath];'
+        'baseDir = [[NSBundle mainBundle] resourcePath];',
+        'baseDir = [TNSAppSync applicationPathWithDefault:[NSBundle mainBundle].bundlePath];'
       );
     }
 
