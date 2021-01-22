@@ -5,7 +5,7 @@
       "version": "6.2.0"
     },
     "tns-android": {
-      "version": "6.2.0"
+      "version": "6.5.4"
     }
   },
   "scripts": {
@@ -31,10 +31,10 @@
     "ci.tslint": "npm i && tslint --config '../tslint.json' 'demoapp/**/*.ts' --exclude '**/node_modules/**' --exclude '**/typings/**'"
   },
   "dependencies": {
-    "nativescript-app-sync": "file:../publish/package/nativescript-app-sync-2.0.0.tgz",
+    "nativescript-app-sync": "file:../publish/package/nativescript-app-sync-3.0.0.tgz",
     "nativescript-theme-core": "~1.0.4",
     "nativescript-unit-test-runner": "0.7.0",
-    "tns-core-modules": "~6.2.0"
+    "tns-core-modules": "~6.5.24"
   },
   "devDependencies": {
     "babel-traverse": "6.26.0",
@@ -45,11 +45,12 @@
     "karma": "4.1.0",
     "karma-jasmine": "2.0.1",
     "karma-nativescript-launcher": "^0.4.0",
+    "karma-webpack": "3.0.5",
     "lazy": "1.0.11",
     "nativescript-dev-webpack": "1.3.0",
+    "tns-ios": "6.5.4",
     "tns-platform-declarations": "~6.2.0",
     "tslint": "~5.20.0",
-    "typescript": "~3.5.3",
-    "karma-webpack": "3.0.5"
+    "typescript": "~3.5.3"
   }
 }
