@@ -27,7 +27,7 @@ function patchUIApplicationMain(iosProjectFolder) {
       replaceInFile(
         appSyncFileDest,
         '[[NSBundle mainBundle] resourcePath]',
-        '[TNSAppSync applicationPathWithDefault:[NSBundle mainBundle].resourcePath]'
+        '[TNSAppSync applicationPathWithDefault:[[NSBundle mainBundle] resourcePath]]'
       );
     }
 
