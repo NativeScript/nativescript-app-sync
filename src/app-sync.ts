@@ -101,7 +101,8 @@ export class AppSync {
     }
 
     // skip AppSync when HMR is detected, unless it's explicitly allowed
-    if (typeof (<any>global).hmrRefresh === "function" && !options.enabledWhenUsingHmr) {
+    // @ts-ignore
+    if (Boolean(module.hot) && !options.enabledWhenUsingHmr) {
       syncCallback && syncCallback(SyncStatus.SKIPPING_BECAUSE_HMR_ENABLED);
       return;
     }
