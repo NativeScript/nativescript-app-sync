@@ -11,7 +11,7 @@
     },
     "hooks": [
       {
-        "type": "before-prepare",
+        "type": "after-prepare",
         "script": "scripts/ios/appsync-ios.js",
         "inject": true
       },
