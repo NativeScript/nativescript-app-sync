@@ -101,7 +101,8 @@ export class AppSync {
     }
 
     // skip AppSync when HMR is detected, unless it's explicitly allowed
-    if (typeof (<any>global).hmrRefresh === "function" && !options.enabledWhenUsingHmr) {
+    // @ts-ignore
+    if (Boolean(module.hot) && !options.enabledWhenUsingHmr) {
       syncCallback && syncCallback(SyncStatus.SKIPPING_BECAUSE_HMR_ENABLED);
       return;
     }
@@ -299,17 +300,16 @@ export class AppSync {
   private static killApp(restartOnAndroid: boolean): void {
     if (Application.android) {
       if (restartOnAndroid) {
+        const packageManager = Application.android.context.getPackageManager();
+        const intent = packageManager.getLaunchIntentForPackage(Application.android.context.getPackageName());
+        const componentName = intent.getComponent();
+
         //noinspection JSUnresolvedFunction,JSUnresolvedVariable
-        const mStartActivity = new android.content.Intent(Application.android.context, Application.android.startActivity.getClass());
-        const mPendingIntentId = parseInt("" + (Math.random() * 100000), 10);
-        //noinspection JSUnresolvedFunction,JSUnresolvedVariable
-        const mPendingIntent = android.app.PendingIntent.getActivity(Application.android.context, mPendingIntentId, mStartActivity, android.app.PendingIntent.FLAG_CANCEL_CURRENT);
-        //noinspection JSUnresolvedFunction,JSUnresolvedVariable
-        const mgr = Application.android.context.getSystemService(android.content.Context.ALARM_SERVICE);
-        //noinspection JSUnresolvedFunction,JSUnresolvedVariable
-        mgr.set(android.app.AlarmManager.RTC, java.lang.System.currentTimeMillis() + 100, mPendingIntent);
+        const mainIntent = new android.content.Intent.makeRestartActivityTask(componentName);
+        Application.android.context.startActivity(mainIntent);
         //noinspection JSUnresolvedFunction,JSUnresolvedVariable
       }
+      //noinspection JSUnresolvedFunction,JSUnresolvedVariable
       android.os.Process.killProcess(android.os.Process.myPid());
     } else if (Application.ios) {
       exit(0);
