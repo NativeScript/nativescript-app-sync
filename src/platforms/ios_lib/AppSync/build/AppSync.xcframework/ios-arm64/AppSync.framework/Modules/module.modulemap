@@ -1,0 +1,6 @@
+framework module AppSync {
+  umbrella header "AppSync.h"
+
+  export *
+  module * { export * }
+}
