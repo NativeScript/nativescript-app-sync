@@ -23,7 +23,7 @@
             NSString* appStoreAppBuildTime = timestamp.stringValue;
             
             BOOL appSyncPackageIsNewerThanAppStoreVersion =
-            [appSyncAppBuildTime isEqualToString: appStoreAppBuildTime] && [appSyncAppVersion isEqualToString: appStoreAppVersion];
+                [appSyncAppBuildTime isEqualToString: appStoreAppBuildTime] && ([appSyncAppVersion isEqualToString: appStoreAppVersion] || [appSyncAppVersion compare:appStoreAppVersion options:NSNumericSearch] == NSOrderedDescending);
             
             if (appSyncPackageIsNewerThanAppStoreVersion) {
                 NSString* docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
