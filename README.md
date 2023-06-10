@@ -256,7 +256,7 @@ Have a few examples for both platforms:
 #### iOS
 
 ```shell
-nativescript-app-sync release <c-ios-appname> ios # deploy to Staging
+nativescript-app-sync release <AppSync-ios-appname> ios # deploy to Staging
 nativescript-app-sync release <AppSync-ios-appname> ios --d Production # deploy to Production (default: Staging)
 nativescript-app-sync release <AppSync-ios-appname> ios --targetBinaryVersion ~1.0.0 # release to users running any 1.x version (default: the exact version in Info.plist)
 nativescript-app-sync release <AppSync-ios-appname> ios --mandatory --description "My mandatory iOS version" # a release for iOS that needs to be applied ASAP.
