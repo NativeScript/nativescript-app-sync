@@ -136,6 +136,14 @@ export class AppSync {
             AppSync.syncInProgress = false;
             return;
           }
+          
+          const versionIsCurrent = remotePackage.packageHash === ApplicationSettings.getString(AppSync.CURRENT_HASH_KEY);
+          if (versionIsCurrent) {
+              console.log("Update already installed.");
+              syncCallback && syncCallback(SyncStatus.UP_TO_DATE);
+              AppSync.syncInProgress = false;
+              return;
+          }
 
           const onError = (error: Error) => {
             console.log("Download error: " + error);
